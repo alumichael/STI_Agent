@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/size_five"
+    android:elevation="@dimen/size_five"
+    android:padding="10dp"
+    android:layout_margin="@dimen/size_five"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First Name: "
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    android:textColor="@color/colorGrey"
+                    />
+                <TextView
+                    android:id="@+id/firstnameList_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="private"
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Name: "
+                    android:layout_margin="6dp"
+                    android:textSize="@dimen/size_twenty"
+                    android:textColor="@color/colorGrey"
+                    />
+                <TextView
+                    android:id="@+id/lastnameList_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Acura"
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number: "
+                    android:layout_margin="6dp"
+                    android:textSize="@dimen/size_twenty"
+                    android:textColor="@color/colorGrey"
+                    />
+                <TextView
+                    android:id="@+id/phoneList_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="XML"
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disability: "
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    android:textColor="@color/colorGrey"
+                    />
+                <TextView
+                    android:id="@+id/disableList_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="438h86"
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Marital Status: "
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    android:textColor="@color/colorGrey"
+                    />
+                <TextView
+                    android:id="@+id/maritalList_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Good"
+                    android:textSize="@dimen/size_twenty"
+                    android:layout_margin="6dp"
+                    />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+</androidx.cardview.widget.CardView>

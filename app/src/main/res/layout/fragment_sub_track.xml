@@ -1,0 +1,121 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f1f1"
+    android:padding="@dimen/size_ten"
+    android:id="@+id/track_form_layout1"
+    tools:context="com.example.sti_agent.operation_fragment.Claim.SubFragment_Track">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_six"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Track Claim"
+                android:layout_margin="2dp"
+                android:textColor="@color/colorPrimary"
+
+                />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardElevation="5dp"
+                        >
+                        <Spinner
+                            android:id="@+id/polcynum_track_type_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="@dimen/size_three"
+
+                            />
+
+                    </androidx.cardview.widget.CardView>
+
+
+
+                    <Button
+                        android:id="@+id/search_btn"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_bg_color_btn"
+                        android:drawableEnd="@drawable/ic_search_black_24dp"
+                        android:padding="@dimen/size_ten"
+                        android:text="Search"
+                        android:elevation="4dp"
+                        android:layout_marginTop="@dimen/size_six"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginBottom="@dimen/size_ten"
+
+                        />
+
+
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:id="@+id/progressbar1_s1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:clickable="false"
+                        android:layout_gravity="start"
+                        app:indicatorColor="@color/colorAccent"
+                        app:indicatorName="BallTrianglePathIndicator"
+                        tools:ignore="RtlHardcoded"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_track_claim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/size_eight"
+                        android:scrollbars="vertical"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/no_post_linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/size_fifty"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/img_empty"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No Claim Response yet"
+                            android:textAlignment="center"
+                            android:textColor="#b8b9c6"
+                            android:textSize="18sp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</FrameLayout>

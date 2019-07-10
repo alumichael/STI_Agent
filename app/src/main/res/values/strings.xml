@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">STI_Agent</string>
+    <string name="title_home">Home</string>
+    <string name="title_customer">Customer</string>
+    <string name="title_transaction">Transactions</string>
+    <string name="title_profile">Profile</string>
+
+
+        <!--Type array-->
+
+    <string-array name="type_array">
+    <item> Type</item>
+    <item> Individual</item>
+    <item> Corporate</item>
+    </string-array>
+
+    <string-array name="sti_est_array">
+        <item> Should STI Provide Estimate </item>
+        <item> Yes </item>
+        <item> No </item>
+    </string-array>
+
+    <string-array name="claim_policytype_array">
+        <item> Should STI Provide Estimate </item>
+        <item> Yes </item>
+        <item> No </item>
+    </string-array>
+
+    <string-array name="claim_array">
+        <item> Claim Type </item>
+        <item> Motor Insurance </item>
+        <item> Non-motor Insurance </item>
+    </string-array>
+
+    <!--gender array-->
+    <string-array name="gender_array">
+    <item> Gender </item>
+    <item> Male</item>
+    <item> Female</item>
+</string-array>
+
+    <string-array name="disable_array">
+        <item> Disability </item>
+        <item> Yes </item>
+        <item> No</item>
+    </string-array>
+
+
+    <string-array name="marital_array">
+        <item> Marital Status </item>
+        <item> Single</item>
+        <item> Married</item>
+        <item> Divorced </item>
+        <item> Widow </item>
+        <item> Widower </item>
+    </string-array>
+
+    <string-array name="currency_array">
+        <item> Currency </item>
+        <item> Dollar </item>
+        <item> Naira </item>
+        <item> Euro </item>
+        <item> Pounds </item>
+        <item> CFA </item>
+    </string-array>
+
+
+    <string-array name="convey_array">
+        <item> Mode of Conveyance </item>
+        <item> Air </item>
+        <item> Sea </item>
+        <item> Rail </item>
+        <item> Road </item>
+    </string-array>
+
+    <string-array name="select_array">
+        <item> Select Item </item>
+        <item> Mobile Phones </item>
+        <item> Laptops </item>
+        <item> Projectors </item>
+        <item> Jewellery </item>
+        <item> Wrist Watch </item>
+
+    </string-array>
+
+    <string-array name="benefit_array">
+        <item> Benefit Category </item>
+        <item> Single</item>
+        <item> Double</item>
+        <item> Tripled </item>
+    </string-array>
+
+    <string-array name="prefix_array">
+        <item> Prefix </item>
+        <item> Mr.</item>
+        <item> Mrs.</item>
+        <item> Ms.</item>
+        <item> Prof.</item>
+        <item> Chief.</item>
+        <item> Dr.</item>
+        <item> Hrm.</item>
+    </string-array>
+
+
+    <string-array name="policy_type_array">
+        <item> Policy Type </item>
+        <item> Private</item>
+        <item> Commercial</item>
+        <item> Motor Cycle</item>
+    </string-array>
+
+    <string-array name="product_type_array">
+        <item> Select Product </item>
+        <item> Bond Policy</item>
+        <item> Engineering Insurance </item>
+        <item> Aviation Insurance</item>
+        <item> Burglary House Breaking Insurance </item>
+        <item> Builders Liability Insurance</item>
+
+    </string-array>
+
+
+    <string-array name="private_type_array">
+        <item> Private </item>
+        <item> 3rd Party Only </item>
+        <item> 3rd Party Fire and theft </item>
+        <item> Enhanced 3rd Party </item>
+        <item> Comprehensive </item>
+    </string-array>
+
+
+    <string-array name="pEnhance_type_array">
+        <item> Enhanced 3rd Party </item>
+        <item> Unique </item>
+        <item> Luxury </item>
+        <item> Prestige </item>
+    </string-array>
+
+    <string-array name="commercial_type_array">
+        <item> Commercial </item>
+        <item> 3rd Party Only </item>
+        <item> Comprehensive </item>
+    </string-array>
+
+    <string-array name="motor_cycle_type_array">
+        <item> Motor Cycle Policy </item>
+        <item> 3rd Party Only </item>
+        <item> Comprehensive </item>
+    </string-array>
+
+    <string-array name="vehicleMaker_type_array">
+        <item> Vehicle Maker </item>
+        <item> Acura </item>
+        <item> Audi </item>
+        <item> Bentley </item>
+        <item> BMW </item>
+        <item> Brilliance </item>
+    </string-array>
+
+    <string-array name="vehicleBody_type_array">
+        <item> Body Type </item>
+        <item> Cars </item>
+        <item> SUV/MUV </item>
+        <item> Coupe </item>
+        <item> Wagon </item>
+        <item> Jeep </item>
+        <item> Saloon/Sedans </item>
+    </string-array>
+
+
+
+
+
+
+
+
+
+
+</resources>

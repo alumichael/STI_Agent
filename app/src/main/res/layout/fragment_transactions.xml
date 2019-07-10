@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UserMain_Fragment.Fragment_Transactions">
+    <ImageView
+        android:id="@+id/bg_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dashboard_bg"
+        />
+
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progressbar_trans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        app:indicatorColor="@color/colorAccent"
+        app:indicatorName="BallPulseSyncIndicator"
+        tools:ignore="RtlHardcoded"/>
+
+  <!--  <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        tools:listitem="@layout/dash_list" />-->
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

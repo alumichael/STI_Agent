@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <array name="steps">
+        <item name="Step 1" type="color">Step 1</item>
+        <item name="Step 2" type="color">Step 2</item>
+        <item name="Step 3" type="color">Step 3</item>
+        <item name="Step 4" type="color">Step 4</item>
+        <item name="Step 5" type="color">Step 5</item>
+    </array>
+
+</resources>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/profile_header" />
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="right|bottom"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:src="@drawable/man"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="2dp"
+                android:clickable="false"/>
+
+            <ImageView
+                android:id="@+id/edit_prof"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:background="@drawable/rounded_textview"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                app:srcCompat="@drawable/ic_edit_black_24dp"
+                android:padding="@dimen/size_ten"
+                android:clickable="true"
+
+                />
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ExpandableListView
+                android:id="@+id/expanded_list_profile"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+
+                />
+
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/size_eight"
+                android:orientation="vertical"
+                android:padding="@dimen/size_ten">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutFirstnameP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+
+                    <EditText
+                        android:id="@+id/firstname_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/size_ten"
+                        android:layout_marginRight="@dimen/size_ten"
+                        
+                        android:hint="First Name"
+                        android:inputType="textPersonName"
+                        android:padding="@dimen/size_ten" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutLastnameP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/lastname_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/size_ten"
+                        android:layout_marginRight="@dimen/size_ten"
+                        
+                       
+                        android:hint="Last Name"
+                        android:inputType="textPersonName"
+                        android:padding="@dimen/size_ten" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutAddr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/addr_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/size_ten"
+                        android:layout_marginRight="@dimen/size_ten"
+                        
+                        android:hint="Address"
+                        android:inputType="textPersonName"
+                        android:padding="@dimen/size_ten" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutPhone_NumP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/phone_num_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/size_ten"
+                        android:layout_marginRight="@dimen/size_ten"
+                        
+                        android:hint="Phone Number"
+                        android:inputType="textPersonName"
+                        android:padding="@dimen/size_ten" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/update_btn"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/size_eighteen"
+                    android:layout_marginTop="@dimen/size_sixteen"
+                    android:layout_marginRight="@dimen/size_eighteen"
+                    android:background="@drawable/rounded_bg_color_btn"
+                    android:text="Update Profile"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
+
+                <com.wang.avi.AVLoadingIndicatorView
+                    android:id="@+id/avi1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:indicatorColor="@color/colorAccent"
+                    app:indicatorName="BallSpinFadeLoaderIndicator" />
+            </LinearLayout>
+        </ScrollView>
+
+
+
+
+    </FrameLayout>
+</LinearLayout>

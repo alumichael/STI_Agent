@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.sti_agent"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:design:${rootProject.ext.designLibVersion}"
+
+    implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.designViewLibVersion}"
+    implementation "com.android.support:cardview-v7:${rootProject.ext.designViewLibVersion}"
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:28.0.0'
+
+    //Library: Butter Knife - Field and method binding for Android views
+    //noinspection GradleDependency
+    implementation "com.jakewharton:butterknife:${rootProject.ext.butterknifeLibVersion}"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.ext.butterknifeLibVersion}"
+    //    Android step view
+    implementation 'com.shuhart.stepview:stepview:1.5.0'
+    implementation 'io.realm:android-adapters:2.1.0'
+
+    //    Android custom progress
+    implementation "com.wang.avi:library:${rootProject.ext.aviLibVersion}"
+//for circular image view
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //    Image slide library android
+    implementation 'com.squareup.picasso:picasso:2.3.2'
+
+    //Gliding image
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.android.support:multidex:1.0.3'
+
+
+    testImplementation "junit:junit:${rootProject.ext.junitLibVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.androidTestRunnerLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.androidTestEspressoLibVersion}"
+
+}

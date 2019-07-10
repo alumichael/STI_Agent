@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.sti_agent">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:name=".BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemeSuper"
+        android:screenOrientation="portrait"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".Splash"
+            android:theme="@style/AppThemeSuper"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SignUp"
+            />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity"
+            />
+        <activity android:name=".operation_activity.CustomerManageActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".operation_activity.MakeClaimActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".operation_activity.PolicyRenewalActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".operation_activity.QuoteBuyActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".operation_activity.RegisterCustomerActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".SignIn" />
+        <activity android:name=".Forms.MotorInsuredForm" />
+        <activity android:name=".Forms.EticForm" />
+        <activity android:name=".Forms.OtherInsuredForm" />
+        <activity android:name=".Forms.MarineForm" />
+        <activity android:name=".Forms.AllRiskForm" />
+        <activity android:name=".Forms.SwissForm" />
+        <activity android:name=".Forms.TrackClaim" />
+        <activity android:name=".Forms.Claim" />
+    </application>
+
+</manifest>
