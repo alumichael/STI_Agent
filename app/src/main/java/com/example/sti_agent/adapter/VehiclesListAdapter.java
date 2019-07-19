@@ -64,6 +64,9 @@ private Context context;
           holder.policytype_txt.setText(temp.getMotor_cycle_policy());
           holder.vehicle_value.setText(temp.getMotorcylce_value());
           holder.reg_num_txt.setText(temp.getRegistration_number());
+          holder.reg_code.setText(temp.getRegistration_number());
+          holder.vehicle_make_txt.setText("---");
+          holder.vehicle_type_txt.setText("---");
 
       }else {
 

@@ -4,6 +4,12 @@
     package="com.example.sti_agent">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -58,6 +64,7 @@
         <activity android:name=".Forms.SwissForm" />
         <activity android:name=".Forms.TrackClaim" />
         <activity android:name=".Forms.Claim" />
+        <activity android:name=".Import.ImportingForm" />
     </application>
 
 </manifest>

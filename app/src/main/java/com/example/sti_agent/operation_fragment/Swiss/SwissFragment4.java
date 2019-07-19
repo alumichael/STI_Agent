@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,7 @@ import com.example.sti_agent.adapter.AddInsuredListAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -69,6 +72,15 @@ class SwissFragment4 extends Fragment implements View.OnClickListener{
     Button mVNextBtn4S4;
     @BindView(R.id.progressbar4_s4)
     AVLoadingIndicatorView mProgressbar4S4;
+
+    @BindView(R.id.inputLayoutPin_s4)
+    TextInputLayout inputLayoutPin_s4;
+
+    @BindView(R.id.pin_txt_s4)
+    EditText pin_txt_s4;
+
+    @BindView(R.id.modeOfPayment_spinner_s4)
+    Spinner modeOfPayment_spinner_s4;
 
 
 

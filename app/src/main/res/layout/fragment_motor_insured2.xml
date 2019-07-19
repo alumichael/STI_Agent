@@ -77,7 +77,7 @@
                             android:background="@drawable/rounded_bg"
                             android:hint="Start Date"
                             android:importantForAutofill="noExcludeDescendants"
-                            android:inputType="text"
+                            android:inputType="date"
                             android:padding="@dimen/size_ten"
                             tools:targetApi="o"
                             />

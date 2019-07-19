@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:background="#f1f1f1"
     android:padding="@dimen/size_ten"
-    android:id="@+id/qb_form_layout3"
-    tools:context="com.example.sti_agent.operation_fragment.MotorInsurance.MotorInsureFragment5">
+    android:id="@+id/qb_form_import_layout2"
+    tools:context="com.example.sti_agent.Import.MotorInsureImportFragment2">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
@@ -35,7 +35,7 @@
             app:sv_doneStepMarkColor="@color/colorPrimary"
             app:sv_stepNumberTextSize="12sp"
             app:sv_animationType="Line"
-            app:sv_stepsNumber="6"
+            app:sv_stepsNumber="3"
             />
 
 
@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Summary"
+                android:text="Import Summary"
                 android:layout_margin="2dp"
                 android:textColor="@color/colorPrimary"
 
@@ -97,6 +97,20 @@
 
                     </androidx.cardview.widget.CardView>
 
+                    <Button
+                        android:id="@+id/multiple_img_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_bg"
+                        android:drawableEnd="@drawable/ic_camera_alt_black_24dp"
+                        android:padding="@dimen/size_eight"
+                        android:text="Select Vehicles Images"
+                        android:layout_marginTop="@dimen/size_ten"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_marginBottom="@dimen/size_ten"
+                        android:visibility="visible"
+                        />
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/inputLayoutPin_m5"
                         android:layout_width="match_parent"
@@ -125,6 +139,8 @@
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="visible"
                         />
+
+
 
 
 

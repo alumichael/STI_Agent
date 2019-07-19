@@ -242,9 +242,6 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
                             personal_detail.setVehicle_info(vehicleDetailsList);
 
-
-
-
                                     final Personal_detail personal_detail1=realm.copyToRealm(personal_detail);
 
                                     VehiclePolicy vehiclePolicy=realm.createObject(VehiclePolicy.class,primaryKey);
@@ -257,11 +254,7 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
                                     vehiclePolicy.getPersonal_info().add(personal_detail1);
 
-
-
                         }else if(!realm.isEmpty()){
-
-
 
                             //Vehicle List
                             VehicleDetails vehicleDetails=new VehicleDetails();
@@ -280,6 +273,7 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
                             vehicleDetails.setChasis_number(userPreferences.getMotorVehicleChasisNum());
                             vehicleDetails.setEngine_number(userPreferences.getMotorVehicleEngNum());
                             vehicleDetails.setMotorcylce_value(userPreferences.getMotorCycleValue());
+                            vehicleDetails.setVehicle_value(userPreferences.getMotorVehicleValue());
                             //Vehicle Picture List
                             VehiclePictures vehiclePictures=new VehiclePictures();
                             vehiclePictures.setFront_view("Front Link");

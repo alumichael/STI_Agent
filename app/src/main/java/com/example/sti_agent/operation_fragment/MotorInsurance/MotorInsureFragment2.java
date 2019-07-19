@@ -428,6 +428,9 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
                 if(privateTypeString.equals("Enhanced 3rd Party")){
                     prEnhance_type_spinner.setVisibility(View.VISIBLE);
                     prEnhance_type_spinner.setClickable(true);
+                }else{
+                    prEnhance_type_spinner.setVisibility(View.GONE);
+                    prEnhance_type_spinner.setClickable(false);
                 }
 
 
@@ -772,9 +775,6 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
 //            Goto to the next Registration step
             initFragment();
         }
-
-
-
 
     }
 

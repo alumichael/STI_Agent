@@ -1,4 +1,4 @@
-package com.example.sti_agent.operation_fragment.MotorInsurance;
+package com.example.sti_agent.Import;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
+import com.example.sti_agent.operation_fragment.MotorInsurance.MotorInsureFragment2;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
@@ -35,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MotorInsureFragment1 extends Fragment implements View.OnClickListener{
+public class MotorInsureImportFragment1 extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,7 +74,7 @@ public class MotorInsureFragment1 extends Fragment implements View.OnClickListen
     EditText contact_person_editxt;
 
 
-    @BindView(R.id.qb_form_layout1)
+    @BindView(R.id.qb_form_import_layout1)
     FrameLayout qb_form_layout1;
 
 
@@ -124,7 +125,7 @@ public class MotorInsureFragment1 extends Fragment implements View.OnClickListen
     private int currentStep = 0;
 
 
-    public MotorInsureFragment1() {
+    public MotorInsureImportFragment1() {
         // Required empty public constructor
     }
 
@@ -137,8 +138,8 @@ public class MotorInsureFragment1 extends Fragment implements View.OnClickListen
      * @return A new instance of fragment Fragment_Dashboard.
      */
     // TODO: Rename and change types and number of parameters
-    public static MotorInsureFragment1 newInstance(String param1, String param2) {
-        MotorInsureFragment1 fragment = new MotorInsureFragment1();
+    public static MotorInsureImportFragment1 newInstance(String param1, String param2) {
+        MotorInsureImportFragment1 fragment = new MotorInsureImportFragment1();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -159,7 +160,7 @@ public class MotorInsureFragment1 extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_motor_insured1, container, false);
+        View view=inflater.inflate(R.layout.fragment_motor_import_insured1, container, false);
         ButterKnife.bind(this,view);
 
         stepView.go(currentStep, true);
@@ -564,9 +565,9 @@ public class MotorInsureFragment1 extends Fragment implements View.OnClickListen
             userPreferences.setMotorIEmail(email_editxt.getText().toString());
             userPreferences.setMotorIMailingAddr(mail_addr_editxt.getText().toString());
 
-            Fragment motorInsureFragment2 = new MotorInsureFragment2();
+            Fragment motorInsureImportFragment2 = new MotorInsureImportFragment2();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_motor_form_container, motorInsureFragment2);
+            ft.replace(R.id.fragment_import_form_container, motorInsureImportFragment2);
             ft.commit();
 
         }catch (Exception e){

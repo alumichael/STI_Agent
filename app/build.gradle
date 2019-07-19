@@ -17,6 +17,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
 
@@ -63,6 +64,22 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.android.support:multidex:1.0.3'
+
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+
+
+    //cloudinary API
+    implementation group: 'com.cloudinary', name: 'cloudinary-android', version: '1.24.0'
+
+    /*//POI import logic
+    implementation 'org.apache.poi:poi:3.17'
+    implementation 'org.apache.poi:poi-ooxml:3.17'*/
+    implementation 'com.fasterxml:aalto-xml:1.0.0'
+
+
+
 
 
     testImplementation "junit:junit:${rootProject.ext.junitLibVersion}"

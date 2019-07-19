@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +32,7 @@ import com.example.sti_agent.UserPreferences;
 import com.example.sti_agent.adapter.VehiclesListAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -63,9 +66,14 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
     @BindView(R.id.personal_info)
     TextView personal_info;
 
+    @BindView(R.id.inputLayoutPin_m5)
+    TextInputLayout inputLayoutPin_m5;
 
+    @BindView(R.id.pin_txt_m5)
+    EditText pin_txt_m4;
 
-
+    @BindView(R.id.modeOfPayment_spinner_m5)
+    Spinner modeOfPayment_spinner_m5;
 
     @BindView(R.id.qb_form_layout3)
     FrameLayout qb_form_layout4;
@@ -148,9 +156,9 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
 
         if(userPreferences.getMotorPtype().equals("Corporate")){
             String corperate="Comapany Name: "+personal_details.get(0).getCompany_name()+"\n"+"TIN Number: "+personal_details.get(0).getTin_number()+"\n"+
-                    "Last Name: "+personal_details.get(0).getLast_name()+"\n"+"Phone Number: "+personal_details.get(0).getPhone()+"\n"+
+                    "\n"+"Phone Number: "+personal_details.get(0).getPhone()+"\n"+
                     "Office Address: "+personal_details.get(0).getOffice_address()+"\n"+"Contact Person: "+personal_details.get(0).getContact_person()+"\n"+
-                    "Phone Number: "+personal_details.get(0).getPhone()+"\n"+"Email Address: "+personal_details.get(0).getEmail()+"\n"+
+                    "\n"+"Email Address: "+personal_details.get(0).getEmail()+"\n"+
                     "Total Premium: "+total_quoteprice;
             personal_info.setText(corperate);
 

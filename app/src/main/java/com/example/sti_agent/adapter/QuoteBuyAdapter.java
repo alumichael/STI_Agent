@@ -12,21 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.sti_agent.Constant;
 import com.example.sti_agent.Forms.AllRiskForm;
 import com.example.sti_agent.Forms.EticForm;
 import com.example.sti_agent.Forms.MarineForm;
+import com.example.sti_agent.Forms.OtherInsuredForm;
 import com.example.sti_agent.Forms.SwissForm;
+import com.example.sti_agent.Import.ImportingForm;
 import com.example.sti_agent.Model.QuoteCard;
 import com.example.sti_agent.R;
 import com.example.sti_agent.interfaces.ItemClickListener;
 import com.example.sti_agent.Forms.MotorInsuredForm;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 public class QuoteBuyAdapter extends RecyclerView.Adapter<QuoteBuyAdapter.MyViewHolder> {
 
@@ -64,16 +64,22 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry = {"Direct Input", "Import CSV file"};
+                    String[] entry = {"Direct Input", "Import Excel file"};
                     builder.setItems(entry, (dialog, option) -> {
                         switch (option) {
                             case 0:
                                 // direct entry
                                 nextActivity(quotecardList.get(pos).getTitle(), MotorInsuredForm.class);
                                 dialog.dismiss();
+                                break;
 
                             case 1: // export
+
+                                nextActivity("Import Motor Detail", ImportingForm.class);
                                 dialog.dismiss();
+                                
+                                break;
+                                
                         }
                     });
 // create and show the alert dialog
@@ -85,7 +91,7 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                     builder1.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry1 = {"Direct Input", "Import CSV file"};
+                    String[] entry1 = {"Direct Input", "Import Excel file"};
                     builder1.setItems(entry1, (dialog1, option) -> {
                         switch (option) {
                             case 0:
@@ -107,7 +113,7 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                     builder2.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry2 = {"Direct Input", "Import CSV file"};
+                    String[] entry2 = {"Direct Input", "Import Excel file"};
                     builder2.setItems(entry2, (dialog2, option) -> {
                         switch (option) {
                             case 0:
@@ -131,7 +137,7 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
                     builder3.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry3 = {"Direct Input", "Import CSV file"};
+                    String[] entry3 = {"Direct Input", "Import Excel file"};
                     builder3.setItems(entry3, (dialog3, option) -> {
                         switch (option) {
                             case 0:
@@ -153,7 +159,7 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder4 = new AlertDialog.Builder(context);
                     builder4.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry4 = {"Direct Input", "Import CSV file"};
+                    String[] entry4 = {"Direct Input", "Import Excel file"};
                     builder4.setItems(entry4, (dialog4, option) -> {
                         switch (option) {
                             case 0:
@@ -175,12 +181,12 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     AlertDialog.Builder builder5 = new AlertDialog.Builder(context);
                     builder5.setTitle("Choose Mode of Entry");
 // add a list
-                    String[] entry5 = {"Direct Input", "Import CSV file"};
+                    String[] entry5 = {"Direct Input", "Import Excel file"};
                     builder5.setItems(entry5, (dialog5, option) -> {
                         switch (option) {
                             case 0:
                                 // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), EticForm.class);
+                                nextActivity(quotecardList.get(pos).getTitle(), OtherInsuredForm.class);
                                 dialog5.dismiss();
 
                             case 1: // export
@@ -205,6 +211,8 @@ private void nextActivity(String title, Class quotecardActivityClass) {
         context.startActivity(i);
 
         }
+
+
 
 @Override
 public int getItemCount() {
@@ -237,4 +245,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         this.itemClickListener.onItemClick(this.getLayoutPosition());
     }
 }
+
+
+   
+    
+
 }

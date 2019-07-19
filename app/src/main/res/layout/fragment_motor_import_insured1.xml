@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:background="#f1f1f1"
     android:padding="@dimen/size_ten"
-    android:id="@+id/qb_form_layout1"
-    tools:context="com.example.sti_agent.operation_fragment.MotorInsurance.MotorInsureFragment1">
+    android:id="@+id/qb_form_import_layout1"
+    tools:context="com.example.sti_agent.Import.MotorInsureImportFragment1">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
@@ -35,7 +35,7 @@
             app:sv_doneStepMarkColor="@color/colorPrimary"
             app:sv_stepNumberTextSize="12sp"
             app:sv_animationType="Line"
-            app:sv_stepsNumber="5"
+            app:sv_stepsNumber="3"
             />
 
         <LinearLayout
@@ -275,7 +275,7 @@ android:visibility="gone"
                             android:background="@drawable/rounded_bg"
                             android:hint="Phone Number"
                             android:importantForAutofill="noExcludeDescendants"
-                            android:inputType="number"
+                            android:inputType="text"
                             android:padding="@dimen/size_ten"
                             tools:targetApi="o"
                             />

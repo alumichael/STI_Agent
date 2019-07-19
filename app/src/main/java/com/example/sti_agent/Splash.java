@@ -80,7 +80,7 @@ public class Splash extends AppCompatActivity {
                 public void run() {
                     try {
                         sleep(3000);
-                        startActivity(new Intent(getApplicationContext(),SignUp.class));
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
                         finish();
                     } catch (InterruptedException e) {
                         e.printStackTrace();

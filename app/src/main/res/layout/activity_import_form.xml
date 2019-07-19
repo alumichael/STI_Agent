@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/motor_insure_layout"
+    android:id="@+id/import_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/motorform_toolbar"
+        android:id="@+id/importform_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -25,11 +25,38 @@
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
-        android:id="@+id/fragment_motor_form_container"
+        android:id="@+id/fragment_import_form_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
 
         />
+       <!-- <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_twenty_eight"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            app:indicatorColor="@color/colorAccent"
+            app:indicatorName="BallPulseSyncIndicator"
+            tools:ignore="RtlHardcoded"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+            <TextView
+                android:id="@+id/import_file_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/size_ten"
+                android:text="File"
+                />
+
+        </ScrollView>
+
+    </FrameLayout>-->
 
 </LinearLayout>

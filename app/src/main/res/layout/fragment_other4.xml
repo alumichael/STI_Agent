@@ -112,7 +112,7 @@
                         android:background="@drawable/rounded_bg"
                         android:hint="Pin"
                         android:importantForAutofill="noExcludeDescendants"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:padding="@dimen/size_ten"
                         tools:targetApi="o"
                         />

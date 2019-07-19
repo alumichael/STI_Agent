@@ -1,14 +1,14 @@
-package com.example.sti_agent.Forms;
+package com.example.sti_agent.Import;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,52 +16,63 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.cloudinary.android.MediaManager;
-import com.cloudinary.android.callback.ErrorInfo;
-import com.cloudinary.android.callback.UploadCallback;
 import com.example.sti_agent.Constant;
 import com.example.sti_agent.R;
 import com.example.sti_agent.operation_fragment.MotorInsurance.MotorInsureFragment1;
 import com.google.android.material.snackbar.Snackbar;
+import com.wang.avi.AVLoadingIndicatorView;
 
-import java.io.IOException;
-import java.util.Map;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MotorInsuredForm extends AppCompatActivity {
+public class ImportingForm extends AppCompatActivity {
 
 
 
-    @BindView(R.id.motorform_toolbar)
+    @BindView(R.id.importform_toolbar)
     Toolbar toolBar;
 
-    @BindView(R.id.motor_insure_layout)
-    LinearLayout motor_insure_layout;
+    @BindView(R.id.import_layout)
+    LinearLayout import_layout;
 
-   /* @BindView(R.id.message)
-    TextView mTextMessage;*/
+/*    @BindView(R.id.import_file_txt)
+    TextView import_file_txt;*/
+
+/*
+    @BindView(R.id.progressbar)
+    AVLoadingIndicatorView progressbar;
+*/
+
+    String title="";
+
 
 
     Fragment fragment;
 
-    String title="";
-
-    //public int PICK_FILE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_motorinsured_form);
+        setContentView(R.layout.activity_import_form);
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
         title=intent.getStringExtra(Constant.CARD_OPTION_TITLE);
         applyToolbarChildren(title);
 
-
-        fragment = new MotorInsureFragment1();
+        //chooseExcelFile();
+        fragment = new MotorInsureImportFragment1();
         showFragment(fragment);
 
     }
@@ -88,14 +99,15 @@ public class MotorInsuredForm extends AppCompatActivity {
     private void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.fragment_motor_form_container, fragment);
+        ft.replace(R.id.fragment_import_form_container, fragment);
         ft.commit();
     }
 
 
 
+
     private void showMessage(String s) {
-        Snackbar.make(motor_insure_layout, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(import_layout, s, Snackbar.LENGTH_SHORT).show();
     }
 
 

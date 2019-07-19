@@ -8,6 +8,13 @@
 
         <!--Type array-->
 
+
+    <string-array name="user_type_array">
+        <item> User Type</item>
+        <item> Agent </item>
+        <item> Broker </item>
+    </string-array>
+
     <string-array name="type_array">
     <item> Type</item>
     <item> Individual</item>
