@@ -1,12 +1,16 @@
 package com.example.sti_agent.operation_fragment.AllRisk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +22,16 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.sti_agent.BuildConfig;
+import com.example.sti_agent.NetworkConnection;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,6 +39,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +57,7 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAA1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -110,8 +128,13 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
 
     String typeString,genderString,prifixString;
     private int currentStep = 0;
+    int PICK_IMAGE_PASSPORT = 1;
+    int CAM_IMAGE_PASSPORT = 2;
+    private String cameraFilePath;
+    NetworkConnection networkConnection=new NetworkConnection();
 
-
+    Uri personal_info_img_uri;
+    String personal_img_url;
 
     public AllriskFragment1() {
         // Required empty public constructor
@@ -219,28 +242,28 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
 
                     //De-Visualizing the corporate form
                     mInputLayoutCompanyNameA1.setVisibility(View.GONE);
-                    mCompanynameEditxtA1.setClickable(false);
+                    mInputLayoutCompanyNameA1.setClickable(false);
                     mInputLayoutTinNumA1.setVisibility(View.GONE);
-                    mTinNumEditxtA1.setClickable(false);
+                    mInputLayoutTinNumA1.setClickable(false);
                     mInputLayoutOfficeAddrA1.setVisibility(View.GONE);
-                    mOfficeAddrEditxtA1.setClickable(false);
+                    mInputLayoutOfficeAddrA1.setClickable(false);
                     mInputLayoutContactPersonA1.setVisibility(View.GONE);
-                    mContactPersonEditxtA1.setClickable(false);
+                    mInputLayoutContactPersonA1.setClickable(false);
 
                     //Visualizing the individual form
 
                     mPrefixSpinnerA1.setVisibility(View.VISIBLE);
                     mPrefixSpinnerA1.setClickable(true);
                     mInputLayoutFirstNameA1.setVisibility(View.VISIBLE);
-                    mFirstnameEditxtA1.setClickable(true);
+                    mInputLayoutFirstNameA1.setClickable(true);
                     mInputLayoutLastNameA1.setVisibility(View.VISIBLE);
-                    mLastnameEditxtA1.setClickable(true);
+                    mInputLayoutLastNameA1.setClickable(true);
                     mGenderSpinnerA1.setVisibility(View.VISIBLE);
                     mGenderSpinnerA1.setClickable(true);
                     mInputLayoutResAddrA1.setVisibility(View.VISIBLE);
-                    mResidentsAddrEditxtA1.setClickable(true);
+                    mInputLayoutResAddrA1.setClickable(true);
                     mInputLayoutNextKinA1.setVisibility(View.VISIBLE);
-                    mNextKinEditxtA1.setClickable(true);
+                    mInputLayoutNextKinA1.setClickable(true);
 
 
                 }else if(stringText.equals("Corporate")){
@@ -248,16 +271,16 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
                     //De-Visualizing the individual form
                     mPrefixSpinnerA1.setVisibility(View.GONE);
                     mPrefixSpinnerA1.setClickable(false);
-                    mFirstnameEditxtA1.setVisibility(View.GONE);
-                    mFirstnameEditxtA1.setClickable(false);
+                    mInputLayoutFirstNameA1.setVisibility(View.GONE);
+                    mInputLayoutFirstNameA1.setClickable(false);
                     mInputLayoutLastNameA1.setVisibility(View.GONE);
-                    mLastnameEditxtA1.setClickable(false);
+                    mInputLayoutLastNameA1.setClickable(false);
                     mInputLayoutNextKinA1.setVisibility(View.GONE);
-                    mNextKinEditxtA1.setClickable(false);
+                    mInputLayoutNextKinA1.setClickable(false);
                     mGenderSpinnerA1.setVisibility(View.GONE);
                     mGenderSpinnerA1.setClickable(false);
                     mInputLayoutResAddrA1.setVisibility(View.GONE);
-                    mResidentsAddrEditxtA1.setClickable(false);
+                    mInputLayoutResAddrA1.setClickable(false);
 
 
 
@@ -265,19 +288,19 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
                     mTypeSpinnerA1.setVisibility(View.VISIBLE);
                     mTypeSpinnerA1.setClickable(true);
                     mInputLayoutCompanyNameA1.setVisibility(View.VISIBLE);
-                    mCompanynameEditxtA1.setClickable(true);
+                    mInputLayoutCompanyNameA1.setClickable(true);
                     mInputLayoutTinNumA1.setVisibility(View.VISIBLE);
-                    mTinNumEditxtA1.setClickable(true);
+                    mInputLayoutTinNumA1.setClickable(true);
                     mInputLayoutOfficeAddrA1.setVisibility(View.VISIBLE);
-                    mOfficeAddrEditxtA1.setClickable(true);
+                    mInputLayoutOfficeAddrA1.setClickable(true);
                     mInputLayoutContactPersonA1.setVisibility(View.VISIBLE);
-                    mContactPersonEditxtA1.setClickable(true);
+                    mInputLayoutContactPersonA1.setClickable(true);
 
                 }else {
 
                     //De-Visualizing the individual form
                     mPrefixSpinnerA1.setVisibility(View.GONE);
-                    mFirstnameEditxtA1.setVisibility(View.GONE);
+                    mInputLayoutFirstNameA1.setVisibility(View.GONE);
                     mInputLayoutLastNameA1.setVisibility(View.GONE);
                     mGenderSpinnerA1.setVisibility(View.GONE);
                     mInputLayoutResAddrA1.setVisibility(View.GONE);
@@ -306,7 +329,7 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
                 //De-Visualizing the individual form
                 mTypeSpinnerA1.getItemAtPosition(0);
                 mPrefixSpinnerA1.setVisibility(View.GONE);
-                mFirstnameEditxtA1.setVisibility(View.GONE);
+                mInputLayoutFirstNameA1.setVisibility(View.GONE);
                 mInputLayoutLastNameA1.setVisibility(View.GONE);
                 mGenderSpinnerA1.setVisibility(View.GONE);
                 mInputLayoutResAddrA1.setVisibility(View.GONE);
@@ -396,6 +419,7 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
     private void setViewActions() {
 
         mNextBtn1A1.setOnClickListener(this);
+        mUploadImgBtn1A1.setOnClickListener(this);
 
     }
 
@@ -405,26 +429,263 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
 
             case R.id.next_btn1_a1:
 //                validate user input
-
-                if (currentStep < mStepView.getStepCount() - 1) {
-                    currentStep++;
-                    mStepView.go(currentStep, true);
-                    validateUserInputs();
-                } else {
-                    mStepView.done(true);
-                }
+                validateUserInputs();
 
                 break;
+
+            case R.id.upload_img_btn1_a1:
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose Mode of Entry");
+// add a list
+                String[] entry = {"Camera", "Gallery"};
+                builder.setItems(entry, (dialog, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdImage_camera();
+                            dialog.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageFile();
+                            dialog.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                mUploadImgBtn1A1.setBackgroundColor(getResources().getColor(R.color.colorAccentEnds));
+
+                break;
+
         }
     }
+
+    private void chooseImageFile() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_PASSPORT);
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //This is the directory in which the file will be created. This is the default location of Camera photos
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for using again
+        cameraFilePath = "file://" + image.getAbsolutePath();
+        return image;
+    }
+
+
+
+    private void chooseIdImage_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_PASSPORT);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0) {
+            showMessage("No image is selected, try again");
+            return;
+        }
+
+
+        showMessage("Uploading...");
+        if (networkConnection.isNetworkConnected(getContext())) {
+            Random random=new Random();
+            String rand= String.valueOf(random.nextInt());
+            if (requestCode == 1) {
+                personal_info_img_uri = data.getData();
+
+                try {
+                    if (personal_info_img_uri != null) {
+                        String name = mEmailEditxtA1.getText().toString()+rand;
+                        if (name.equals("")) {
+                            showMessage("Enter your email address first");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(personal_info_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/user_passport" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mNextBtn1A1.setVisibility(View.GONE);
+                                            mProgressbar1A1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1A1.setVisibility(View.VISIBLE);
+                                            if(!networkConnection.isNetworkConnected(getContext())){
+                                                mProgressbar1A1.setVisibility(View.GONE);
+                                                mNextBtn1A1.setVisibility(View.VISIBLE);
+                                                showMessage("Internet Connection Failed");
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1A1.setVisibility(View.GONE);
+                                            mNextBtn1A1.setVisibility(View.VISIBLE);
+                                            personal_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mNextBtn1A1.setVisibility(View.VISIBLE);
+                                            mProgressbar1A1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode==2){
+                personal_info_img_uri = Uri.parse(cameraFilePath);
+
+                try {
+                    if (personal_info_img_uri != null) {
+                        String name = mEmailEditxtA1.getText().toString()+rand;
+                        if (name.equals("")) {
+                            showMessage("Enter your email address first");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(personal_info_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/user_passport" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mNextBtn1A1.setVisibility(View.GONE);
+                                            mProgressbar1A1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1A1.setVisibility(View.VISIBLE);
+                                            if(!networkConnection.isNetworkConnected(getContext())){
+                                                mProgressbar1A1.setVisibility(View.GONE);
+                                                mNextBtn1A1.setVisibility(View.VISIBLE);
+                                                showMessage("Internet Connection Failed");
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1A1.setVisibility(View.GONE);
+                                            mNextBtn1A1.setVisibility(View.VISIBLE);
+                                            personal_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mNextBtn1A1.setVisibility(View.VISIBLE);
+                                            mProgressbar1A1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+            }
+            return;
+        }
+        showMessage("No Internet connection discovered!");
+    }
+
+
 
     private void validateUserInputs() {
 
 
         boolean isValid = true;
 
-        if (mFirstnameEditxtA1.getText().toString().isEmpty()&&mFirstnameEditxtA1.isClickable()) {
-            mFirstnameEditxtA1.setError("Your FirstName is required!");
+        if (mFirstnameEditxtA1.getText().toString().isEmpty()&&mInputLayoutFirstNameA1.isClickable()) {
+            mInputLayoutFirstNameA1.setError("Your FirstName is required!");
             isValid = false;
         } else if (mLastnameEditxtA1.getText().toString().isEmpty()&&mInputLayoutLastNameA1.isClickable()) {
             mInputLayoutLastNameA1.setError("Your LastName is required!");
@@ -494,17 +755,22 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
             mInputLayoutResAddrA1.setErrorEnabled(false);
         }
 
+        if (personal_img_url==null) {
+            showMessage("Please upload an image: passport,company license..etc");
+            isValid = false;
+        }
+
 
         //Tyepe Spinner
         typeString = mTypeSpinnerA1.getSelectedItem().toString();
-        if (typeString.equals("Type")&&mTypeSpinnerA1.isClickable()) {
+        if (typeString.equals("Select Type")&&mTypeSpinnerA1.isClickable()) {
 
             showMessage("Select Product Type");
             isValid = false;
         }
         //Prefix Spinner
         prifixString = mPrefixSpinnerA1.getSelectedItem().toString();
-        if (prifixString.equals("Prefix")&&mPrefixSpinnerA1.isClickable()) {
+        if (prifixString.equals("Select Prefix")&&mPrefixSpinnerA1.isClickable()) {
             showMessage("Select your Prefix e.g Mr.");
             isValid = false;
         }
@@ -550,11 +816,21 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
             userPreferences.setAllRiskIPhoneNum(mPhoneNoEditxtA1.getText().toString());
             userPreferences.setAllRiskIEmail(mEmailEditxtA1.getText().toString());
             userPreferences.setAllRiskIMailingAddr(mMailAddrEditxtA1.getText().toString());
+            userPreferences.setAllRiskPersonalImage(personal_img_url);
 
-            Fragment allriskFragment2 = new AllriskFragment2();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_allrisk_form_container, allriskFragment2);
-            ft.commit();
+            if (currentStep < mStepView.getStepCount() - 1) {
+                currentStep++;
+                Fragment allriskFragment2 = new AllriskFragment2();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_allrisk_form_container, allriskFragment2);
+                ft.commit();
+                mStepView.go(currentStep, true);
+
+            } else {
+                mStepView.done(true);
+            }
+
+
 
         }catch (Exception e){
             Log.i("Form Error",e.getMessage());
@@ -567,7 +843,7 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
 
 
     private void showMessage(String s) {
-        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_LONG).show();
     }
 
     public static boolean isValidEmailAddress(String email) {
@@ -582,31 +858,6 @@ public class AllriskFragment1 extends Fragment implements View.OnClickListener{
         }
 
         return result;
-    }
-
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
     }
 
 

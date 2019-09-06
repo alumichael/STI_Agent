@@ -27,9 +27,6 @@ private Context context;
    // int count=0;
 
 
-
-
-
     public VehiclesListAdapter(RealmResults<VehicleDetails> list , Context context) {
         super(list,true,true);
         this.context=context;

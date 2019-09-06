@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -130,9 +132,40 @@ class EticFragment4 extends Fragment implements View.OnClickListener{
         realm= Realm.getDefaultInstance();
 
         init();
+        modeofPaymentSpinner();
         setViewActions();
 
         return  view;
+    }
+
+    private void modeofPaymentSpinner() {
+        // Create an ArrayAdapter using the string array and a default spinner
+        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
+                .createFromResource(getContext(), R.array.mode_of_payment,
+                        android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        mModeOfPaymentSpinnerE4.setAdapter(staticAdapter);
+
+        mModeOfPaymentSpinnerE4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String modeofPaymentTypeString = (String) parent.getItemAtPosition(position);
+
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mModeOfPaymentSpinnerE4.getItemAtPosition(0);
+            }
+        });
+
     }
     private void init(){
 

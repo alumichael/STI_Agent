@@ -3,7 +3,9 @@ package com.example.sti_agent;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -11,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +40,15 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            try {
+                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                m.invoke(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
 //      Create instance of Preference class
         UserPreferences userPreferences = new UserPreferences(this);
@@ -80,7 +93,7 @@ public class Splash extends AppCompatActivity {
                 public void run() {
                     try {
                         sleep(3000);
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(),SignIn.class));
                         finish();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -90,7 +103,7 @@ public class Splash extends AppCompatActivity {
             myThread.start();
         }else {
             userPreferences.setFirstTimeLaunch(false);
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), SignUp.class));
             finish();
         }
     }

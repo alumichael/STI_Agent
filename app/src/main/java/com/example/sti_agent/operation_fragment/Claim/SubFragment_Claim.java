@@ -2,12 +2,16 @@ package com.example.sti_agent.operation_fragment.Claim;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +25,15 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.sti_agent.BuildConfig;
+import com.example.sti_agent.NetworkConnection;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
 import com.example.sti_agent.operation_fragment.Swiss.SwissFragment2;
@@ -32,9 +42,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,8 +103,26 @@ public class SubFragment_Claim extends Fragment implements View.OnClickListener{
 
 
 
-    String claimTypeString,policyTypeString,stiEstTypeString,pinString;
+    String claimTypeString,policyTypeString,stiEstTypeString,pinString,cameraFilePath;
     private int currentStep = 0;
+
+    int PICK_IMAGE_ESTIMATE = 1;
+    int PICK_IMAGE_DAMAGEPIX = 2;
+    int PICK_OTHER_DOC= 3;
+
+    int CAM_IMAGE_ESTIMATE = 11;
+    int CAM_IMAGE_DAMAGEPIX = 22;
+    int CAM_OTHER_DOC= 33;
+    NetworkConnection networkConnection=new NetworkConnection();
+
+    Uri estimate_img_uri;
+    String estimate_img_url;
+
+    Uri otherdoc_img_uri;
+    String otherdoc_img_url;
+
+    Uri damage_img_uri;
+    String damage_img_url;
 
 
     public SubFragment_Claim() {
@@ -248,14 +282,94 @@ public class SubFragment_Claim extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.upload_damage_pix:
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose Mode of Entry");
+// add a list
+                String[] entry = {"Camera", "Gallery"};
+                builder.setItems(entry, (dialog, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdImageDamage_camera();
+                            dialog.dismiss();
+                            break;
 
+                        case 1: // export
+
+                            chooseImageDamage();
+                            dialog.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                mUploadDamagePix.setBackgroundColor(getResources().getColor(R.color.colorAccentEnds));
+                
+                   
                 break;
 
             case R.id.upload_estimate_cost:
+                // setup the alert builder
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("Choose Mode of Entry");
+// add a list
+                String[] entry2 = {"Camera", "Gallery"};
+                builder2.setItems(entry2, (dialog2, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdImageEstimate_camera();
+                            dialog2.dismiss();
+                            break;
 
+                        case 1: // export
+
+                            chooseImageEstimate();
+                            dialog2.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog2 = builder2.create();
+                dialog2.show();
+                mUploadEstimateCost.setBackgroundColor(getResources().getColor(R.color.colorAccentEnds));
+
+                
                 break;
 
             case R.id.upload_document:
+                // setup the alert builder
+                AlertDialog.Builder builder3 = new AlertDialog.Builder(getContext());
+                builder3.setTitle("Choose Mode of Entry");
+// add a list
+                String[] entry3 = {"Camera", "Gallery"};
+                builder3.setItems(entry3, (dialog3, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdOtherDoc_camera();
+                            dialog3.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseOtherDoc();
+                            dialog3.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog3 = builder3.create();
+                dialog3.show();
+                mUploadDocument.setBackgroundColor(getResources().getColor(R.color.colorAccentEnds));
 
                 break;
             case R.id.proceed:
@@ -266,6 +380,564 @@ public class SubFragment_Claim extends Fragment implements View.OnClickListener{
         }
     }
 
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //This is the directory in which the file will be created. This is the default location of Camera photos
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for using again
+        cameraFilePath = "file://" + image.getAbsolutePath();
+        return image;
+    }
+
+
+
+    private void chooseIdImageEstimate_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_ESTIMATE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+
+    private void chooseIdImageDamage_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_DAMAGEPIX);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+    private void chooseIdOtherDoc_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_OTHER_DOC);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+    
+    private void chooseImageEstimate() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_ESTIMATE);
+    }
+
+    private void chooseImageDamage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_DAMAGEPIX);
+    }
+
+    private void chooseOtherDoc() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_OTHER_DOC);
+    }
+
+   
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0 || data == null || data.getData() == null) {
+            showMessage("No image is selected, try again");
+            return;
+        }
+
+
+        showMessage("Uploading...");
+        if (networkConnection.isNetworkConnected(getContext())) {
+
+            if (requestCode == 1) {
+                estimate_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (estimate_img_uri != null) {
+                        String name = "frontview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(estimate_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            estimate_img_url= String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            if (requestCode == 11) {
+                estimate_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (estimate_img_uri != null) {
+                        String name = "frontview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(estimate_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            estimate_img_url= String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            else if (requestCode == 2){
+
+                damage_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (damage_img_uri != null) {
+                        String name = "damage"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(damage_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            damage_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if (requestCode == 22){
+
+                damage_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (damage_img_uri != null) {
+                        String name = "damage"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(damage_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            damage_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 3){
+
+                otherdoc_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (otherdoc_img_uri != null) {
+                        String name = "otherdoc"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(otherdoc_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            otherdoc_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 33){
+
+                otherdoc_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (otherdoc_img_uri != null) {
+                        String name = "otherdoc"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(otherdoc_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mProceed.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            otherdoc_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mProceed.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            return;
+        }
+        showMessage("No Internet connection discovered!");
+    }
+    
+    
     private void validateUserInputs() {
 
         boolean isValid = true;
@@ -307,8 +979,7 @@ public class SubFragment_Claim extends Fragment implements View.OnClickListener{
 
             //Claim Type Spinner
             claimTypeString = mClaimTypeSpinner.getSelectedItem().toString();
-            if (claimTypeString.equals("Claim Type")) {
-
+            if (claimTypeString.equals("Select Claim Type")) {
                 showMessage("Select Claim Type");
                 isValid = false;
             }
@@ -392,31 +1063,7 @@ public class SubFragment_Claim extends Fragment implements View.OnClickListener{
 
 
     private void showMessage(String s) {
-        Snackbar.make(mClaimFormLayout1, s, Snackbar.LENGTH_SHORT).show();
-    }
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
+        Snackbar.make(mClaimFormLayout1, s, Snackbar.LENGTH_LONG).show();
     }
 
 

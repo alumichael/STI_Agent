@@ -12,6 +12,7 @@ public class Constant {
     //    SharedPreferences
     public static final String USER_PREF = "prefs";
     public static final int PRIVATE_MODE = 0;
+    public static final String BASE_URL = "http://188.166.153.239/api/";
 
 //  User profile constant
 public static final String USER_TYPE = "user_type";
@@ -20,6 +21,9 @@ public static final String USER_TYPE = "user_type";
     public static final String PHONE_NUMBER = "phone_number";
     public static final String DATE_OF_BIRTH = "birthday";
     public static final String User_ID = "user_id";
+    public static final String User_Token = "user_token";
+    public static final String Agent_ID = "agent_id";
+    public static final String AGENT_EMAIL = "agent_email";
     public static final String ADDRESS = "address";
     public static final String GENDER = "gender";
     public static final String STATE = "state";
@@ -41,6 +45,24 @@ public static final String USER_TYPE = "user_type";
 
 
     public static String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+
+    //Personal Data
+    public static String AGENT_USERNAME = "agent_username";
+    public static String BIO = "bio";
+    public static String AGENT_PROFILE_IMAGE_URL = "profile_img_url";
+    public static String AGENT_PHONE_NUM = "agent_phone_num";
+    public static String PIN = "pin";
+    public static String AGENT_FIRSTNAME = "agent_firstname";
+    public static String AGENT_LASTNAME = "agent_lastname";
+    public static String WALLET_BALANCE = "wallet_balance";
+    public static String BANK = "bank";
+    public static String ACCOUNT_NUMBER = "account_number";
+    public static String ACCOUNT_NAME = "account_name";
+
+
+
+
+
 
 
     //Motor Insurance Personal

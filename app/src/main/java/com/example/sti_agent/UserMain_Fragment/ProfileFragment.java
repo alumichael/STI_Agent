@@ -2,8 +2,11 @@ package com.example.sti_agent.UserMain_Fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +16,30 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.sti_agent.NetworkConnection;
 import com.example.sti_agent.R;
+import com.example.sti_agent.UserPreferences;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wang.avi.AVLoadingIndicatorView;
 
+
+import java.util.Map;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,53 +48,73 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public  class ProfileFragment extends Fragment {
 
-    String address;
-    @BindView(R.id.addr_editxt)
-    EditText addr_editxt;
-    String firstname;
-    @BindView(R.id.firstname_editxt)
-    EditText firstname_editxt;
-    private Uri imageUri;
-    @BindView(R.id.inputLayoutAddr)
-    TextInputLayout inputLayoutAddr;
-    @BindView(R.id.inputLayoutFirstnameP)
-    TextInputLayout inputLayoutFirstnameP;
-    @BindView(R.id.inputLayoutLastnameP)
-    TextInputLayout inputLayoutLastnameP;
-    @BindView(R.id.inputLayoutPhone_NumP)
-    TextInputLayout inputLayoutPhone_NumP;
-
-    String phone_num;
-    @BindView(R.id.phone_num_editxt)
-    EditText phone_num_editxt;
-    @BindView(R.id.profile_photo)
-    CircleImageView profile_photo;
-    @BindView(R.id.update_btn)
-    Button update_btn;
-
-
-
-
-    String lastname;
-    @BindView(R.id.lastname_editxt)
-    EditText lastname_editxt;
 
     @BindView(R.id.profile_lay)
-    LinearLayout profile_lay;
-
+    LinearLayout mProfileLay;
+    @BindView(R.id.relative_layout_photo)
+    RelativeLayout mRelativeLayoutPhoto;
+    @BindView(R.id.profile_photo)
+    CircleImageView mProfilePhoto;
     @BindView(R.id.edit_prof)
-    ImageView edit_prof;
+    ImageView mEditProf;
+    @BindView(R.id.username_txt)
+    TextView mUsernameTxt;
+    @BindView(R.id.progressBar_profile)
+    ProgressBar mProgressBarProfile;
+    @BindView(R.id.profile_data_layout)
+    ScrollView mProfileDataLayout;
+    @BindView(R.id.firstname)
+    TextView mFirstname;
+    @BindView(R.id.lastname)
+    TextView mLastname;
+    @BindView(R.id.email)
+    TextView mEmail;
+    @BindView(R.id.phone_num)
+    TextView mPhoneNum;
+    @BindView(R.id.pin_profile_txt)
+    TextView mPinProfileTxt;
+    @BindView(R.id.bank)
+    TextView mBank;
+    @BindView(R.id.account_name)
+    TextView mAccountName;
+    @BindView(R.id.account_number)
+    TextView mAccountNumber;
+    @BindView(R.id.edit_layout)
+    ScrollView mEditLayout;
+    @BindView(R.id.inputLayoutFirstnameP)
+    TextInputLayout mInputLayoutFirstnameP;
+    @BindView(R.id.firstname_editxt)
+    EditText mFirstnameEditxt;
+    @BindView(R.id.inputLayoutLastnameP)
+    TextInputLayout mInputLayoutLastnameP;
+    @BindView(R.id.lastname_editxt)
+    EditText mLastnameEditxt;
+    @BindView(R.id.inputLayoutUsername)
+    TextInputLayout mInputLayoutUsername;
+    @BindView(R.id.username_editxt)
+    EditText mUsernameEditxt;
+    @BindView(R.id.inputLayoutPhone_NumP)
+    TextInputLayout mInputLayoutPhoneNumP;
+    @BindView(R.id.phone_num_editxt)
+    EditText mPhoneNumEditxt;
+    @BindView(R.id.inputLayoutPassword)
+    TextInputLayout inputLayoutPassword;
+    @BindView(R.id.password_editxt)
+    EditText password_editxt;
+    @BindView(R.id.update_btn)
+    Button mUpdateBtn;
     @BindView(R.id.avi1)
-    AVLoadingIndicatorView progressBar_profile;
+    AVLoadingIndicatorView mAvi1;
 
-    @BindView(R.id.expanded_list_profile)
-    ExpandableListView expanded_list_profile;
+    private Uri imageUri;
+    String address,firstname,phone_num,lastname;
 
-    private String[] groups;
-    private String[][] children;
-    Activity activity;
+    int PICK_IMAGE_PASSPORT = 1;
+    NetworkConnection networkConnection=new NetworkConnection();
 
-    ExpandableListAdapter expandableListAdapter;
+    Uri profile_photo_img_uri;
+    String personal_img_url;
+    UserPreferences userPreferences;
 
 
     public ProfileFragment() {
@@ -91,21 +127,9 @@ public  class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, fragmentView);
+        userPreferences=new UserPreferences(getContext());
+
         getUserProfile();
-
-        activity=getActivity();
-
-
-        // preparing list data
-        prepareListData();
-
-        expandableListAdapter=new ExpandableListAdapter(activity,groups, children);
-
-        expanded_list_profile.setAdapter(expandableListAdapter);
-        expanded_list_profile.setGroupIndicator(null);
-
-
-
         return fragmentView;
     }
 
@@ -120,20 +144,134 @@ public  class ProfileFragment extends Fragment {
 
     }
 
+
+    private void chooseImageFile() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_PASSPORT);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0 || data == null || data.getData() == null) {
+            showMessage("No image is selected, try again");
+            return;
+        }
+
+
+
+
+        showMessage(String.valueOf(requestCode));
+        if (networkConnection.isNetworkConnected(getContext())) {
+            Random random=new Random();
+            String rand= String.valueOf(random.nextInt());
+            if (requestCode == 1) {
+                profile_photo_img_uri = data.getData();
+
+                try {
+                    if (profile_photo_img_uri != null) {
+                        String name = "profile_photo"+rand;
+                        if (name.equals("")) {
+                            showMessage("Try again");
+
+                        } else {
+                            mProfilePhoto.setImageBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), profile_photo_img_uri));
+
+
+                            String imageId = MediaManager.get().upload(Uri.parse(profile_photo_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/user_passport" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mUpdateBtn.setVisibility(View.GONE);
+                                            mAvi1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mAvi1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mAvi1.setVisibility(View.GONE);
+                                            mUpdateBtn.setVisibility(View.VISIBLE);
+                                            personal_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mUpdateBtn.setVisibility(View.VISIBLE);
+                                            mAvi1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            return;
+        }
+        showMessage("No Internet connection discovered!");
+    }
+
     private void editProfile() {
-        expanded_list_profile.setVisibility(View.GONE);
-        edit_prof.setVisibility(View.GONE);
-
-        profile_photo.setClickable(true);
-
-        inputLayoutAddr.setVisibility(View.VISIBLE);
-        inputLayoutFirstnameP.setVisibility(View.VISIBLE);
-        inputLayoutLastnameP.setVisibility(View.VISIBLE);
-        inputLayoutPhone_NumP.setVisibility(View.VISIBLE);
-        update_btn.setVisibility(View.VISIBLE);
+        mProfileDataLayout.setVisibility(View.GONE);
+        mEditProf.setVisibility(View.GONE);
+        mProfilePhoto.setClickable(true);
+        mEditLayout.setVisibility(View.VISIBLE);
 
 
-        update_btn.setOnClickListener(new View.OnClickListener() {
+            mPhoneNumEditxt.setText(userPreferences.getAgentEmail());
+            mUsernameEditxt.setText(userPreferences.getAgentUsername());
+            mFirstnameEditxt.setText(userPreferences.getAgentFirstName());
+            mLastnameEditxt.setText(userPreferences.getAgentLastName());
+
+
+        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageFile();
+            }
+        });
+
+
+
+
+        mUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Request for Post Request for Profile Update
@@ -141,165 +279,47 @@ public  class ProfileFragment extends Fragment {
 
                 showMessage("Updated Successfully");
 
+                mProfilePhoto.setClickable(false);
+                mEditLayout.setVisibility(View.GONE);
 
 
-                profile_photo.setClickable(false);
-
-                inputLayoutAddr.setVisibility(View.GONE);
-                inputLayoutFirstnameP.setVisibility(View.GONE);
-                inputLayoutLastnameP.setVisibility(View.GONE);
-                inputLayoutPhone_NumP.setVisibility(View.GONE);
-                update_btn.setVisibility(View.GONE);
-
-                expanded_list_profile.setVisibility(View.VISIBLE);
-                edit_prof.setVisibility(View.VISIBLE);
+                mProfileDataLayout.setVisibility(View.VISIBLE);
+                mEditProf.setVisibility(View.VISIBLE);
 
             }
         });
-
-
-
-
-
-
     }
 
 
     private void showMessage(String s) {
-        Snackbar.make(profile_lay, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mProfileLay, s, Snackbar.LENGTH_SHORT).show();
     }
 
     private void getUserProfile() {
+        //Getting profile from Pref
+        mFirstname.setText("FirstName: "+userPreferences.getAgentFirstName());
+        mLastname.setText("LastName: "+userPreferences.getAgentLastName());
+        mUsernameTxt.setText(userPreferences.getAgentUsername());
+        mEmail.setText("Email: "+userPreferences.getAgentEmail());
+        mPhoneNum.setText("Phone No: "+userPreferences.getAgentPhoneNUM());
+        mPinProfileTxt.setText("Pin: "+userPreferences.getAgentPin());
+        mBank.setText("Bank Name: "+userPreferences.getBank());
+        mAccountName.setText("Acct Name: "+userPreferences.getAccountName());
+        mAccountNumber.setText("Acct No: "+userPreferences.getAccountNumber());
 
+        mProgressBarProfile.setVisibility(View.VISIBLE);
+        if(personal_img_url==null) {
+            Glide.with(getContext()).load(userPreferences.getAgentProfileImg()).apply(new RequestOptions().fitCenter().circleCrop()).into(mProfilePhoto);
+        }else{
+            Glide.with(getContext()).load(personal_img_url).apply(new RequestOptions().fitCenter().circleCrop()).into(mProfilePhoto);
 
-
-
-        /*progressBar_profile.setVisibility(View.VISIBLE);
-        //Fetch from API
-        //Try to get the USername from Shared Pref and do a Post Request for it
-        //auth = FirebaseAuth.getInstance().getCurrentUser();
-        if (auth != null) {
-
-            return;
         }
-        Snackbar.make(this.profile_lay, "Null User, Try to Re-Login", Snackbar.LENGTH_SHORT).setAction((CharSequence) "Action", null).show();
-    */
+        mProgressBarProfile.setVisibility(View.GONE);
+
+
 
     }
 
 
 
-
-    private void prepareListData() {
-
-        groups = new String[] { "First Name: "+"Michael", "Last Name: "+"Boluwaji Oluwa Damilola", "Agent Address: "+"No 1, Ajefemi Street, Ketu Lagos State Nigeria", "Agent Phone Number: "+"+2349012345678" };
-
-        children = new String [][] {
-                { "Michael" },
-                { "Boluwaji Oluwadamilola" },
-                { "No 1, Ajefemi Street, Ketu Lagos State Nigeria" },
-                { "+2349087744857" }
-
-        };
-
-
-    }
-
-
-}
-
-class ExpandableListAdapter extends BaseExpandableListAdapter {
-
-    private final LayoutInflater inf;
-    private String[] groups;
-    private String[][] children;
-    private Context context;
-    public ExpandableListAdapter(Context context,String[] groups, String[][] children) {
-        this.groups = groups;
-        this.children = children;
-
-        inf = LayoutInflater.from(context);
-    }
-
-    @Override
-    public int getGroupCount() {
-        return groups.length;
-    }
-
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        return children[groupPosition].length;
-    }
-
-    @Override
-    public Object getGroup(int groupPosition) {
-        return groups[groupPosition];
-    }
-
-    @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return children[groupPosition][childPosition];
-    }
-
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
-
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_item, parent, false);
-            holder = new ViewHolder();
-
-            holder.text = (TextView) convertView.findViewById(R.id.lblListItem);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.text.setText(getChild(groupPosition, childPosition).toString());
-
-        return convertView;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_group, parent, false);
-
-            holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.lblListHeader);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.text.setText(getGroup(groupPosition).toString());
-
-        return convertView;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
-
-    private class ViewHolder {
-        TextView text;
-    }
 }

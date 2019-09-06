@@ -12,8 +12,7 @@
         android:src="@drawable/register_bg"
         android:scaleType="centerCrop"
         />
-
-    <LinearLayout
+  <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/size_eight"
@@ -21,6 +20,17 @@
         android:padding="@dimen/size_ten"
         android:layout_marginTop="@dimen/size_ten"
         android:orientation="vertical">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Registration"
+          android:textSize="@dimen/size_twenty_three"
+          android:fontFamily="@font/montserrat_regular"
+          android:textColor="@color/colorPrimary"
+          android:layout_marginBottom="4dp"
+          android:padding="2dp"
+          android:textAlignment="center"/>
 
 
         <ScrollView
@@ -46,17 +56,20 @@
                         android:orientation="vertical"
                         android:layout_weight="1"
                         >
+
                         <Spinner
                             android:id="@+id/user_type_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
+                            android:background="@drawable/spinner_bg"
                             android:visibility="visible"
                             android:clickable="true"
+                            android:elevation="1.5dp"
 
                             />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputLayoutName"
+                            android:id="@+id/inputLayoutFirstName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="visible"
@@ -64,12 +77,34 @@
                             >
 
                             <EditText
-                                android:id="@+id/name_editxt"
+                                android:id="@+id/firstname_editxt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/size_three"
                                 android:drawableStart="@drawable/ic_account_circle_black_24dp"
-                                android:hint="Full Name e.g Michael Alu Boluwaji"
+                                android:hint="First Name"
+                                android:importantForAutofill="noExcludeDescendants"
+                                android:inputType="text"
+                                android:padding="@dimen/size_ten"
+                                tools:targetApi="o" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputLayoutLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="visible"
+                            android:clickable="true"
+                            >
+
+                            <EditText
+                                android:id="@+id/lastname_editxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/size_three"
+                                android:drawableStart="@drawable/ic_account_circle_black_24dp"
+                                android:hint="Last Name"
                                 android:importantForAutofill="noExcludeDescendants"
                                 android:inputType="text"
                                 android:padding="@dimen/size_ten"
@@ -107,13 +142,13 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:layout_gravity="center"
-                        android:layout_margin="2dp"
+                         android:layout_margin="2dp"
                         android:visibility="visible"
                         android:clickable="true"
                         >
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/user_img"
-                            android:layout_width="90dp"
+                            android:layout_width="100dp"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             app:civ_border_width="3dp"
@@ -125,13 +160,10 @@
                             android:layout_height="wrap_content"
                             android:text="Upload Passport"
                             android:textColor="@color/colorPrimary"
+                           android:fontFamily="@font/montserrat_regular"
                             />
 
                     </LinearLayout>
-
-
-
-
 
                 </LinearLayout>
 
@@ -156,6 +188,29 @@
                         tools:targetApi="o" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:clickable="true">
+
+                    <EditText
+                        android:id="@+id/password_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/size_three"
+                        android:drawableLeft="@drawable/ic_fingerprint_black_24dp"
+                        android:hint="Password"
+                        android:importantForAutofill="noExcludeDescendants"
+                        android:inputType="textPassword"
+                        android:padding="@dimen/size_ten"
+                        tools:targetApi="o" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/inputLayoutContactPerson"
@@ -259,7 +314,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/size_three"
                         android:drawableLeft="@drawable/ic_event_note_black_24dp"
-                        android:hint="dd/mm/yyyy"
+                        android:hint="Date of Birthday(dd-mm-yyyy)"
                         android:importantForAutofill="noExcludeDescendants"
                         android:inputType="date"
                         android:padding="@dimen/size_ten"
@@ -294,6 +349,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:visibility="visible"
+                    android:background="@drawable/spinner_bg"
                     android:clickable="true"
                     />
                 <com.google.android.material.textfield.TextInputLayout
@@ -317,11 +373,54 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+
                 <LinearLayout
+                    android:id="@+id/choose_country_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="2"
+                    android:clickable="true"
+                    >
+
+                    <Spinner
+                        android:id="@+id/country_spinner"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="2dp"
+                        android:layout_height="50dp"
+                        android:visibility="visible"
+                        android:background="@drawable/spinner_bg"
+                        android:clickable="true"
+                        android:elevation="1.5dp"
+                        />
+
+
+
+                    <Spinner
+                        android:id="@+id/state_spinner"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="50dp"
+                        android:visibility="visible"
+                        android:background="@drawable/spinner_bg"
+                        android:clickable="true"
+                        android:elevation="1.5dp"
+                        />
+
+
+                </LinearLayout>
+
+                <!--Other Country-->
+
+                <LinearLayout
+                    android:id="@+id/choose_other_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:visibility="gone"
+                    android:clickable="false"
                     >
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -330,7 +429,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:visibility="visible"
-                        android:clickable="true"
+                        android:clickable="false"
                         >
 
                         <EditText
@@ -352,7 +451,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:visibility="visible"
-                        android:clickable="true"
+                        android:clickable="false"
                         >
 
                         <EditText
@@ -416,12 +515,14 @@
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:orientation="horizontal"
+                   android:weightSum="2"
                    >
                    <Button
                        android:id="@+id/upload_file"
-                       android:layout_width="wrap_content"
+                       android:layout_width="0dp"
                        android:layout_height="wrap_content"
-                       android:background="@color/colorAccent"
+                       android:layout_weight="1"
+                       android:background="@drawable/rounded_right_bg_color_btn"
                        android:textColor="@color/colorPrimary"
                        android:text="Upload File"
                        android:elevation="4dp"
@@ -430,12 +531,13 @@
                        />
                    <Button
                        android:id="@+id/upload_id_front"
-                       android:layout_width="wrap_content"
+                       android:layout_width="0dp"
                        android:layout_height="wrap_content"
-                       android:background="@color/colorAccent"
+                       android:layout_weight="1"
                        android:textColor="@color/colorPrimary"
                        android:text="Front"
                        android:elevation="4dp"
+                       android:background="@drawable/rounded_bg_color_btn"
                        android:visibility="visible"
                        android:clickable="true"
 
@@ -445,33 +547,33 @@
                        android:layout_height="wrap_content" />
                    <Button
                        android:id="@+id/upload_id_back"
-                       android:layout_width="wrap_content"
+                       android:layout_width="0dp"
+                       android:layout_weight="1"
                        android:layout_height="wrap_content"
                        android:textColor="@color/colorPrimary"
-                       android:background="@color/colorAccent"
+                       android:background="@drawable/rounded_right_bg_color_btn"
                        android:elevation="4dp"
                        android:text="Back"
+                       android:fontFamily="@font/montserrat_semibold"
                        android:visibility="visible"
                        android:clickable="true"
                        />
 
                </LinearLayout>
 
-
-
-
             </LinearLayout>
         </ScrollView>
 
         <Button
             android:id="@+id/complete_reg_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/size_ten"
             android:layout_marginTop="@dimen/size_ten"
             android:background="@drawable/rounded_bg_color_btn"
             android:padding="@dimen/size_twelve"
             android:text="Register"
+            android:fontFamily="@font/montserrat_semibold"
             android:drawableEnd="@drawable/ic_done_all_black_24dp"
             android:layout_marginRight="@dimen/size_ten"
             android:layout_marginLeft="@dimen/size_ten"
@@ -487,20 +589,41 @@
             android:visibility="gone"
             android:layout_gravity="center"
             app:indicatorColor="@color/colorAccent"
-            app:indicatorName="BallPulseSyncIndicator"
+            app:indicatorName="BallPulseIndicator"
             tools:ignore="RtlHardcoded"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:gravity="center_horizontal"
+          android:orientation="horizontal">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
+              android:layout_marginEnd="@dimen/size_two"
+              android:layout_marginStart="@dimen/size_eight"
+              android:text="Already Register? "
+              android:fontFamily="@font/montserrat_regular"
+              android:textSize="16sp"
+              android:textColor="@color/colorGrey"
+              />
 
-        <TextView
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="@dimen/size_ten"
-            android:layout_marginLeft="@dimen/size_ten"
-            android:text="Got an ID ?\nClick to Login"
-            android:textSize="17sp"
-            android:textColor="@color/colorPrimary"
-            />
+          <TextView
+              android:id="@+id/login"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
+              android:text="@string/login_txt"
+              android:textColorLink="@color/colorPrimary"
+              android:fontFamily="@font/montserrat_regular"
+              android:textSize="16sp"
+              android:textStyle="bold"
+              android:textColor="@color/colorGrey"
+              />
+      </LinearLayout>
+
+
 
     </LinearLayout>
 

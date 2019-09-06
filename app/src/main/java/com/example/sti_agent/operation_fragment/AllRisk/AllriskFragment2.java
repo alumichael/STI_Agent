@@ -1,5 +1,6 @@
 package com.example.sti_agent.operation_fragment.AllRisk;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -34,6 +36,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 
 import butterknife.BindView;
@@ -86,7 +89,8 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
 
  
 
-    String itemTypeString;
+    String itemTypeString,startDateStrg;
+    DatePickerDialog datePickerDialog1;
 
     public AllriskFragment2() {
         // Required empty public constructor
@@ -136,6 +140,7 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
 
 
         setViewActions();
+        showDatePicker();
 
         return  view;
     }
@@ -197,6 +202,7 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
 
         mVNextBtn2A2.setOnClickListener(this);
         mVBackBtn2A2.setOnClickListener(this);
+        mStartDateA2.setOnClickListener(this);
 
     }
 
@@ -208,6 +214,11 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
                 validateUserInputs();
                 break;
 
+            case R.id.start_date_a2:
+
+                datePickerDialog1.show();
+                break;
+
             case R.id.v_back_btn2_a2:
                 if (currentStep > 0) {
                     currentStep--;
@@ -215,9 +226,9 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
                 mStepView.done(false);
                 mStepView.go(currentStep, true);
 
-                Fragment allriskFragment2 = new AllriskFragment2();
+                Fragment allriskFragment1 = new AllriskFragment1();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_allrisk_form_container, allriskFragment2);
+                ft.replace(R.id.fragment_allrisk_form_container, allriskFragment1);
                 ft.commit();
 
                 break;
@@ -306,29 +317,28 @@ public class AllriskFragment2 extends Fragment implements View.OnClickListener{
 
 
 
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
+    private void showDatePicker() {
+        //Get current date
+        Calendar calendar = Calendar.getInstance();
 
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
+        //Create datePickerDialog with initial date which is current and decide what happens when a date is selected.
+        datePickerDialog1 = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                //When a date is selected, it comes here.
+                //Change birthdayEdittext's text and dismiss dialog.
+                if(year<calendar.get(Calendar.YEAR)){
+
+                    showMessage("Invalid Start Date");
+                    Log.i("Calendar",year+" "+calendar.get(Calendar.YEAR));
+                    return;
                 }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
+                int monthofYear=monthOfYear+1;
+                startDateStrg = dayOfMonth + "-" + monthofYear + "-" + year;
+                mStartDateA2.setText(startDateStrg);
+                datePickerDialog1.dismiss();
             }
-        }
-
-        return false;
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
-
 
 }

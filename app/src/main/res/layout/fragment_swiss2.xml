@@ -128,6 +128,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
+                        android:background="@drawable/spinner_bg"
 
                         />
 
@@ -146,7 +147,7 @@
                             android:background="@drawable/rounded_bg"
                             android:hint="Phone Number"
                             android:importantForAutofill="noExcludeDescendants"
-                            android:inputType="text"
+                            android:inputType="number"
                             android:padding="@dimen/size_ten"
                             tools:targetApi="o"
                             />
@@ -184,7 +185,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/size_three"
                             android:background="@drawable/rounded_bg"
-                            android:hint="Any Form of Disability(Enter No! if No)"
+                            android:hint="Any Form of Disability? [Enter No! if No]"
                             android:importantForAutofill="noExcludeDescendants"
                             android:inputType="text"
                             android:padding="@dimen/size_ten"
@@ -196,6 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
+                        android:background="@drawable/spinner_bg"
                         />
 
                     <Spinner
@@ -203,6 +205,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
+                        android:background="@drawable/spinner_bg"
 
                         />
 

@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="220dp"
         android:orientation="vertical">
 
         <ImageView
@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:background="@drawable/profile_header" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,17 +64,27 @@
 
 
             <TextView
+                android:id="@+id/username_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Micheal Boluwaji"
+                android:text="Username"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textSize="25sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textAlignment="center"
                 android:layout_marginTop="8dp"
 
                 />
+
         </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="bottom"
+            />
 
     </FrameLayout>
 
@@ -94,21 +105,399 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
+        <ScrollView
+            android:id="@+id/profile_data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:visibility="visible"
 
-            <ExpandableListView
-                android:id="@+id/expanded_list_profile"
-                android:layout_height="match_parent"
+            >
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_person_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/firstname"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="FirstNamehhhhhhhhhhhhhhhhhhhhhhhhhhhhjhghggghhhhhhhhhhhhhhhh"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_person_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/lastname"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="LastName"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
 
 
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_email_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/email"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Email"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_phone_android_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/phone_num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Phone Number"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_vpn_key_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/pin_profile_txt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="PIN"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_payment_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/bank"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Bank"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_payment_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/account_name"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Account Name"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:backgroundTint="@color/colorWhite"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/size_eighteen"
+                        android:gravity="center_vertical"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_payment_black_24dp"/>
+
+                        <TextView
+                            android:id="@+id/account_number"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Account Number"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_margin="2dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            />
+                    </LinearLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
 
 
         <ScrollView
+            android:id="@+id/edit_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:scrollbars="vertical"
+            android:visibility="gone"
             >
 
             <LinearLayout
@@ -122,7 +511,6 @@
                     android:id="@+id/inputLayoutFirstnameP"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     >
 
                     <EditText
@@ -131,8 +519,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/size_ten"
                         android:layout_marginRight="@dimen/size_ten"
-                        
                         android:hint="First Name"
+
                         android:inputType="textPersonName"
                         android:padding="@dimen/size_ten" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -141,8 +529,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/inputLayoutLastnameP"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/lastname_editxt"
@@ -150,28 +537,42 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/size_ten"
                         android:layout_marginRight="@dimen/size_ten"
-                        
-                       
                         android:hint="Last Name"
                         android:inputType="textPersonName"
                         android:padding="@dimen/size_ten" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputLayoutAddr"
+                    android:id="@+id/inputLayoutUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    >
 
                     <EditText
-                        android:id="@+id/addr_editxt"
+                        android:id="@+id/username_editxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/size_ten"
                         android:layout_marginRight="@dimen/size_ten"
-                        
-                        android:hint="Address"
+                        android:hint="Username"
                         android:inputType="textPersonName"
+                        android:padding="@dimen/size_ten" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <EditText
+                        android:id="@+id/password_editxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/size_ten"
+                        android:layout_marginRight="@dimen/size_ten"
+                        android:hint="Password"
+                        android:inputType="textPassword"
                         android:padding="@dimen/size_ten" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,7 +580,7 @@
                     android:id="@+id/inputLayoutPhone_NumP"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    >
 
                     <EditText
                         android:id="@+id/phone_num_editxt"
@@ -187,7 +588,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/size_ten"
                         android:layout_marginRight="@dimen/size_ten"
-                        
                         android:hint="Phone Number"
                         android:inputType="textPersonName"
                         android:padding="@dimen/size_ten" />
@@ -204,7 +604,7 @@
                     android:text="Update Profile"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@android:color/white"
-                    android:visibility="gone" />
+                   />
 
                 <com.wang.avi.AVLoadingIndicatorView
                     android:id="@+id/avi1"

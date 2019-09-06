@@ -1,11 +1,6 @@
 package com.example.sti_agent.operation_fragment.MotorInsurance;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.os.Build;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -22,19 +18,30 @@ import android.widget.Spinner;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.sti_agent.Model.Errors.APIError;
+import com.example.sti_agent.Model.Errors.ErrorUtils;
+import com.example.sti_agent.Model.ServiceGenerator;
+import com.example.sti_agent.Model.Vehicle.BrandType.VehicleBrandType;
+import com.example.sti_agent.Model.Vehicle.BrandType.VehicleTypeData;
+import com.example.sti_agent.Model.Vehicle.VehicleBrand.VehicleData;
+import com.example.sti_agent.Model.Vehicle.VehicleBrand.Vehicles_Brand;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
+import com.example.sti_agent.retrofit_interface.ApiInterface;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MotorInsureFragment2 extends Fragment implements View.OnClickListener{
@@ -105,17 +112,14 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
 
     private int currentStep = 1;
 
+    //The variables for VehincleData
+    List<VehicleData> vehicleDataList;
+    ArrayList<String> vehiclesMakerSpinnerList=new ArrayList<>();
+    //The Variables for VehicleBrandType
+    List<VehicleTypeData> vehicleBrandTypeList;
+    ArrayList<String> vehiclesBrandSpinnerList=new ArrayList<>();
 
-
-
-    ArrayList<String> defaultType = new ArrayList<String>(
-            Collections.singletonList("Vehicle Type"));
-
-    ArrayList<String> acura = new ArrayList<String>(
-            Arrays.asList("Vehicle Type","Buenos Aires", "Córdoba", "La Plata"));
-
-    ArrayList<String> audi = new ArrayList<String>(
-            Arrays.asList("Vehicle Type","MDX", "RDX", "TL"));
+    int vehicleId;
 
   //Button
     @BindView(R.id.v_next_btn1)
@@ -132,9 +136,11 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
     @BindView(R.id.progressbar)
     AVLoadingIndicatorView progressbar;
 
-    String polyTypeString,privateTypeString,prEnhanceString,commerTypeString,motorCycleTypeString,vehicleMakeString,vehicleTypeString,vehincleBodyString;
+    String polyTypeString,privateTypeString,prEnhanceString,commerTypeString;
+    String motorCycleTypeString,vehicleMakeString,vehicleTypeString,vehincleBodyString,startDateStrg;
+    ApiInterface client = ServiceGenerator.createService(ApiInterface.class);
 
-
+    DatePickerDialog datePickerDialog1;
     public MotorInsureFragment2() {
         // Required empty public constructor
     }
@@ -192,13 +198,8 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
         //motorCycleTypeString = motor_cycle_type_spinner.getSelectedItem().toString();
         setViewActions();
 
-        vehicleMakerSpinner();
-       // vehicleMakeString = vehicle_make_spinner.getSelectedItem().toString();
-
-        vehicleTypeSpinner(defaultType);
-
         vehicleBodySpinner();
-       // vehincleBodyString = vehicle_body_type_spinner.getSelectedItem().toString();
+        showDatePicker();
 
 
         return  view;
@@ -224,6 +225,8 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
         motor_cycle_value.setText(userPreferences.getMotorCycleValue());
 
         vehicle_value.setText(userPreferences.getMotorVehicleValue());
+
+        fetchVehicleMaker();
 
 
     }
@@ -534,68 +537,7 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
         });
 
     }
-    private void vehicleMakerSpinner() {
-        // Create an ArrayAdapter using the string array and a default spinner
-        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
-                .createFromResource(getContext(), R.array.vehicleMaker_type_array,
-                        android.R.layout.simple_spinner_item);
 
-        // Specify the layout to use when the list of choices appears
-        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        vehicle_make_spinner.setAdapter(staticAdapter);
-
-        vehicle_make_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                String VehicleMakerString = (String) parent.getItemAtPosition(position);
-                switch (VehicleMakerString){
-                    case "Acura":
-                        vehicleTypeSpinner(acura);
-                        break;
-                    case "Audi":
-                        vehicleTypeSpinner(audi);
-                        break;
-
-                }
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                vehicle_make_spinner.getItemAtPosition(0);
-            }
-        });
-
-    }
-
-    private void vehicleTypeSpinner(ArrayList<String> arrayList) {
-        // Create an ArrayAdapter using the string array and a default spinner
-
-        vehicle_type_spinner
-                .setAdapter(new ArrayAdapter<String>(getContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        arrayList));
-
-        vehicle_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                String VehicleTypeString = (String) parent.getItemAtPosition(position);
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                vehicle_type_spinner.getItemAtPosition(0);
-            }
-        });
-
-    }
 
     private void vehicleBodySpinner() {
         // Create an ArrayAdapter using the string array and a default spinner
@@ -638,6 +580,7 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
 
         v_next_btn.setOnClickListener(this);
         v_back_btn.setOnClickListener(this);
+        start_date.setOnClickListener(this);
 
     }
 
@@ -649,7 +592,14 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
                 validateUserInputs();
                 break;
 
+            case R.id.start_date:
+//                show date picker
+                datePickerDialog1.show();
+
+                break;
+
             case R.id.v_back_btn1:
+                //do to previous fragment
                 if (currentStep > 0) {
                     currentStep--;
                 }
@@ -716,55 +666,55 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
         // Spinner Validations
         //policyType validation
         polyTypeString = poly_type_spinner.getSelectedItem().toString();
-        if (polyTypeString.equals("Policy Type")&&poly_type_spinner.isClickable()) {
+        if (polyTypeString.equals("Select Policy Type")&&poly_type_spinner.isClickable()) {
             showMessage("Select Policy Type");
             isValid = false;
         }
         //Private Spinner
         prEnhanceString = prEnhance_type_spinner.getSelectedItem().toString();
-        if (prEnhanceString.equals("Enhanced 3rd Party")&&prEnhance_type_spinner.isClickable()) {
+        if (prEnhanceString.equals("Select Enhanced 3rd Party")&&prEnhance_type_spinner.isClickable()) {
             showMessage("Select your Enhance Party Category");
             isValid = false;
         }
 
         //Private Spinner
         privateTypeString = private_type_spinner.getSelectedItem().toString();
-        if (privateTypeString.equals("Private")&&private_type_spinner.isClickable()) {
+        if (privateTypeString.equals("Select Cover")&&private_type_spinner.isClickable()) {
             showMessage("Select your Private Category");
             isValid = false;
         }
 
         //Commercial Spinner
         commerTypeString = commercial_type_spinner.getSelectedItem().toString();
-        if (commerTypeString.equals("Commercial")&&commercial_type_spinner.isClickable()) {
+        if (commerTypeString.equals("Select Cover")&&commercial_type_spinner.isClickable()) {
             showMessage("Select your Commercial Category");
             isValid = false;
         }
 
         //Motor Cycle Spinner
         motorCycleTypeString = motor_cycle_type_spinner.getSelectedItem().toString();
-        if (motorCycleTypeString.equals("Motor Cycle")&&motor_cycle_type_spinner.isClickable()) {
+        if (motorCycleTypeString.equals("Select Motor Cycle Policy")&&motor_cycle_type_spinner.isClickable()) {
             showMessage("Select your Motor Cycle Category");
             isValid = false;
         }
 
         //VehincleMaker Spinner
         vehicleMakeString = vehicle_make_spinner.getSelectedItem().toString();
-        if (vehicleMakeString.equals("Vehicle Maker")&&vehicle_make_spinner.isClickable()) {
+        if (vehicleMakeString.equals("Select Vehicle Maker")&&vehicle_make_spinner.isClickable()) {
             showMessage("Select your Motor Vehicle Maker");
             isValid = false;
         }
 
         //VehicleType Spinner
         vehicleTypeString = vehicle_type_spinner.getSelectedItem().toString();
-        if (vehicleTypeString.equals("Vehicle Type")&&vehicle_type_spinner.isClickable()) {
-            showMessage("Select your Motor Vehicle Type");
+        if (vehicleTypeString.equals("Select Brand")&&vehicle_type_spinner.isClickable()) {
+            showMessage("Select your Motor Brand");
             isValid = false;
         }
 
         //VehicleBody Spinner
         vehincleBodyString = vehicle_body_type_spinner.getSelectedItem().toString();
-        if (vehincleBodyString.equals("Body Type")&&vehicle_body_type_spinner.isClickable()) {
+        if (vehincleBodyString.equals("Select Body Type")&&vehicle_body_type_spinner.isClickable()) {
             showMessage("Select your Vehicle Body Type");
             isValid = false;
         }
@@ -821,34 +771,199 @@ public class MotorInsureFragment2 extends Fragment implements View.OnClickListen
 
 
     private void showMessage(String s) {
-        Snackbar.make(qb_form_layout2, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(qb_form_layout2, s, Snackbar.LENGTH_LONG).show();
     }
 
 
 
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
+    private void showDatePicker() {
+        //Get current date
+        Calendar calendar = Calendar.getInstance();
 
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
+        //Create datePickerDialog with initial date which is current and decide what happens when a date is selected.
+        datePickerDialog1 = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                //When a date is selected, it comes here.
+                //Change birthdayEdittext's text and dismiss dialog.
+                if(year<calendar.get(Calendar.YEAR)){
+
+                    showMessage("Invalid Start Date");
+                    Log.i("Calendar",year+" "+calendar.get(Calendar.YEAR));
+                    return;
                 }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
+                int monthofYear=monthOfYear+1;
+                startDateStrg = dayOfMonth + "-" + monthofYear + "-" + year;
+                start_date.setText(startDateStrg);
+                datePickerDialog1.dismiss();
             }
-        }
-
-        return false;
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 
+    private void fetchVehicleMaker(){
+        //get client and call object for request
+
+        showMessage("Initializing page, please wait...");
+        btn_layout2.setVisibility(View.GONE);
+        progressbar.setVisibility(View.VISIBLE);
+        Call<Vehicles_Brand> call=client.vehicle_brand();
+        call.enqueue(new Callback<Vehicles_Brand>() {
+            @Override
+            public void onResponse(Call<Vehicles_Brand> call, Response<Vehicles_Brand> response) {
+                try {
+                    if (!response.isSuccessful()) {
+
+                        try{
+                            APIError apiError= ErrorUtils.parseError(response);
+
+                            showMessage("Fetch Failed: "+apiError.getErrors());
+                            Log.i("Fetch Failed",apiError.getErrors().toString());
+                            Log.i("Fetch Failed",response.errorBody().toString());
+
+                        }catch (Exception e){
+                            Log.i("Fetch Failed",e.getMessage());
+                            showMessage("Fetch Failed");
+
+                        }
+                        btn_layout2.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    vehicleDataList = response.body().getVehicleData();
+
+                    vehiclesMakerSpinnerList.add("Select Vehicle Maker");
+                    for(int i=0; i<vehicleDataList.size();i++){
+                        vehiclesMakerSpinnerList.add(vehicleDataList.get(i).getName());
+                    }
+                    vehicleMakerSpinner();
+
+                    btn_layout2.setVisibility(View.VISIBLE);
+                    progressbar.setVisibility(View.GONE);
+                    showMessage("You can now select you policy..");
+
+                }catch (Exception e){
+                    showMessage("Fetch Error: " + e.getMessage());
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Vehicles_Brand> call, Throwable t) {
+                showMessage("Fetch Failed "+t.getMessage());
+                Log.i("GEtError",t.getMessage());
+                btn_layout2.setVisibility(View.VISIBLE);
+                progressbar.setVisibility(View.GONE);
+            }
+        });
+
+
+    }
+    private void vehicleMakerSpinner() {
+        // Create an ArrayAdapter using the string array and a default spinner
+        vehicle_make_spinner
+                .setAdapter(new ArrayAdapter<String>(getContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        vehiclesMakerSpinnerList));
+
+        vehicle_make_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String VehicleMakerString = (String) parent.getItemAtPosition(position);
+                vehicleId=position+1;
+                //get client and call object for request
+
+                showMessage("Please wait...");
+                btn_layout2.setVisibility(View.GONE);
+                progressbar.setVisibility(View.VISIBLE);
+                Call<VehicleBrandType> call=client.brand_type(vehicleId);
+
+                call.enqueue(new Callback<VehicleBrandType>() {
+                    @Override
+                    public void onResponse(Call<VehicleBrandType> call, Response<VehicleBrandType> response) {
+                        try {
+                            if (!response.isSuccessful()) {
+
+                                try{
+                                    APIError apiError= ErrorUtils.parseError(response);
+
+                                    showMessage("Fetch Failed: "+apiError.getErrors());
+                                    Log.i("Fetch Failed",apiError.getErrors().toString());
+                                    Log.i("Fetch Failed",response.errorBody().toString());
+
+                                }catch (Exception e){
+                                    Log.i("Fetch Failed",e.getMessage());
+                                    showMessage("Fetch Failed");
+
+                                }
+                                btn_layout2.setVisibility(View.VISIBLE);
+                                progressbar.setVisibility(View.GONE);
+                                return;
+                            }
+
+                            vehicleBrandTypeList = response.body().getData();
+                            vehiclesBrandSpinnerList.clear();
+                            vehiclesBrandSpinnerList.add("Select Brand");
+                            for(int i=0; i<vehicleBrandTypeList.size();i++){
+
+
+                                vehiclesBrandSpinnerList.add(vehicleBrandTypeList.get(i).getName());
+                            }
+
+                            vehicleTypeSpinner();
+
+                            btn_layout2.setVisibility(View.VISIBLE);
+                            progressbar.setVisibility(View.GONE);
+                            showMessage("Pick your Brand Type...");
+
+                        }catch (Exception e){
+                            showMessage("Fetch Error: " + e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<VehicleBrandType> call, Throwable t) {
+                        showMessage("Fetch Failed "+t.getMessage());
+                        Log.i("GEtError",t.getMessage());
+                        btn_layout2.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                vehicle_make_spinner.getItemAtPosition(0);
+            }
+        });
+
+    }
+
+    private void vehicleTypeSpinner() {
+        // Create an ArrayAdapter using the string array and a default spinner
+        vehicle_type_spinner
+                .setAdapter(new ArrayAdapter<String>(getContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        vehiclesBrandSpinnerList));
+
+        vehicle_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String VehicleBraandTypeString = (String) parent.getItemAtPosition(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                vehicle_type_spinner.getItemAtPosition(0);
+            }
+        });
+
+    }
 
 }

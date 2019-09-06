@@ -4,6 +4,7 @@ public class QuoteCard {
 
 
     private String title;
+    private int thumbnail;
 
     public QuoteCard(String title, int thumbnail) {
         this.title = title;
@@ -11,7 +12,7 @@ public class QuoteCard {
 
     }
 
-    private int thumbnail;
+
 
 
 

@@ -89,6 +89,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="@dimen/size_three"
                     android:visibility="visible"
+                        android:background="@drawable/spinner_bg"
                     />
                     <Spinner
                         android:id="@+id/private_type_spinner"
@@ -96,6 +97,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
                     <Spinner
@@ -104,6 +106,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
                     <Spinner
@@ -112,6 +115,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
                     <Spinner
@@ -120,6 +124,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
 
@@ -128,6 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
+                        android:background="@drawable/spinner_bg"
                         android:visibility="visible"
                         />
                     <Spinner
@@ -135,6 +141,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
+                        android:background="@drawable/spinner_bg"
                         android:visibility="visible"
                         />
 
@@ -144,6 +151,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
 
@@ -162,7 +170,7 @@
                             android:background="@drawable/rounded_bg"
                             android:hint="Year"
                             android:importantForAutofill="noExcludeDescendants"
-                            android:inputType="text"
+                            android:inputType="number"
                             android:padding="@dimen/size_ten"
                             tools:targetApi="o"
                             />

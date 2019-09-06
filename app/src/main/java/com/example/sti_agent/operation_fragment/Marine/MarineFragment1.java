@@ -252,28 +252,28 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
 
                     //De-Visualizing the corporate form
                     mInputLayoutCompanyNameM1.setVisibility(View.GONE);
-                    mCompanynameEditxtM1.setClickable(false);
+                    mInputLayoutCompanyNameM1.setClickable(false);
                     mInputLayoutTinNumM1.setVisibility(View.GONE);
-                    mTinNumEditxtM1.setClickable(false);
+                    mInputLayoutTinNumM1.setClickable(false);
                     mInputLayoutOfficeAddrM1.setVisibility(View.GONE);
-                    mOfficeAddrEditxtM1.setClickable(false);
+                    mInputLayoutOfficeAddrM1.setClickable(false);
                     mInputLayoutTradeM1.setVisibility(View.GONE);
-                    mTradeEditxtM1.setClickable(false);
+                    mInputLayoutTradeM1.setClickable(false);
                     mInputLayoutContactPersonM1.setVisibility(View.GONE);
-                    mContactPersonEditxtM1.setClickable(false);
+                    mInputLayoutContactPersonM1.setClickable(false);
 
                     //Visualizing the individual form
 
                     mPrefixSpinnerM1.setVisibility(View.VISIBLE);
                     mPrefixSpinnerM1.setClickable(true);
                     mInputLayoutFirstNameM1.setVisibility(View.VISIBLE);
-                    mFirstnameEditxtM1.setClickable(true);
+                    mInputLayoutFirstNameM1.setClickable(true);
                     mInputLayoutLastNameM1.setVisibility(View.VISIBLE);
-                    mLastnameEditxtM1.setClickable(true);
+                    mInputLayoutLastNameM1.setClickable(true);
                     mGenderSpinnerM1.setVisibility(View.VISIBLE);
                     mGenderSpinnerM1.setClickable(true);
                     mInputLayoutResAddrM1.setVisibility(View.VISIBLE);
-                    mResidentsAddrEditxtM1.setClickable(true);
+                    mInputLayoutResAddrM1.setClickable(true);
                    
 
                 }else if(stringText.equals("Corporate")){
@@ -434,14 +434,8 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
 
             case R.id.next_btn1_m1:
 //                validate user input
+                validateUserInputs();
 
-                if (currentStep < mStepView.getStepCount() - 1) {
-                    currentStep++;
-                    mStepView.go(currentStep, true);
-                    validateUserInputs();
-                } else {
-                    mStepView.done(true);
-                }
 
                 break;
         }
@@ -525,14 +519,14 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
 
             //Tyepe Spinner
             typeString = mTypeSpinnerM1.getSelectedItem().toString();
-            if (typeString.equals("Type")&&mTypeSpinnerM1.isClickable()) {
+            if (typeString.equals("Select Type")&&mTypeSpinnerM1.isClickable()) {
 
                 showMessage("Select Product Type");
                 isValid = false;
             }
             //Prefix Spinner
             prifixString = mPrefixSpinnerM1.getSelectedItem().toString();
-            if (prifixString.equals("Prefix")&&mPrefixSpinnerM1.isClickable()) {
+            if (prifixString.equals("Select Prefix")&&mPrefixSpinnerM1.isClickable()) {
                 showMessage("Select your Prefix e.g Mr.");
                 isValid = false;
             }
@@ -543,7 +537,7 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
                 isValid = false;
             }
             maritalString = mMaritalSpinnerM1.getSelectedItem().toString();
-            if (maritalString.equals("Marital Status")&&mMaritalSpinnerM1.isClickable()) {
+            if (maritalString.equals("Select Marital Status")&&mMaritalSpinnerM1.isClickable()) {
                 showMessage("Don't forget to Select Marital Status");
                 isValid = false;
             }
@@ -583,11 +577,18 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
             userPreferences.setMarineIPhoneNum(mPhoneNoEditxtM1.getText().toString());
             userPreferences.setMarineIEmail(mEmailEditxtM1.getText().toString());
             userPreferences.setMarineIMailingAddr(mMailAddrEditxtM1.getText().toString());
+            if (currentStep < mStepView.getStepCount() - 1) {
+                currentStep++;
+                Fragment marineFragment2 = new MarineFragment2();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_marine_form_container, marineFragment2);
+                ft.commit();
+                mStepView.go(currentStep, true);
 
-            Fragment marineFragment2 = new MarineFragment2();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_marine_form_container, marineFragment2);
-            ft.commit();
+            } else {
+                mStepView.done(true);
+            }
+
 
         }catch (Exception e){
             Log.i("Form Error",e.getMessage());
@@ -600,7 +601,7 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
 
 
     private void showMessage(String s) {
-        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_LONG).show();
     }
 
     public static boolean isValidEmailAddress(String email) {
@@ -617,30 +618,6 @@ public class MarineFragment1 extends Fragment implements View.OnClickListener{
         return result;
     }
 
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
-    }
 
 
 }

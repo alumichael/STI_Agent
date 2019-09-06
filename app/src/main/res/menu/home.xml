@@ -41,6 +41,12 @@
         android:fontFamily="@font/montserrat_light"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_change_pass"
+        android:orderInCategory="104"
+        android:title="Change Password"
+        android:fontFamily="@font/montserrat_light"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_logout"
         android:orderInCategory="105"
         android:title="Log out"

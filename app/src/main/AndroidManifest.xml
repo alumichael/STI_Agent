@@ -5,20 +5,26 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission
+        android:name="android.permission.CAMERA"/>
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/sti_logo_dark"
+        android:roundIcon="@drawable/sti_logo_dark"
         android:supportsRtl="true"
+        android:label="STI Agent"
         android:theme="@style/AppThemeSuper"
         android:screenOrientation="portrait"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        >
         <activity
             android:name=".Splash"
             android:theme="@style/AppThemeSuper"
@@ -41,6 +47,10 @@
             </intent-filter>
         </activity>
 
+      <!--  <meta-data
+            android:name="co.paystack.android.PublicKey"
+            android:value="pk_test_d0ca9d91eeee10ecba75c648e988170b29d0978e"/>
+-->
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity"
@@ -65,6 +75,17 @@
         <activity android:name=".Forms.TrackClaim" />
         <activity android:name=".Forms.Claim" />
         <activity android:name=".Import.ImportingForm" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

@@ -4,19 +4,20 @@
     <string name="title_customer">Customer</string>
     <string name="title_transaction">Transactions</string>
     <string name="title_profile">Profile</string>
+    <string name="login_txt">Click to Login</string>
 
 
-        <!--Type array-->
+    <!--Type array-->
 
 
     <string-array name="user_type_array">
-        <item> User Type</item>
+        <item> Select User Type </item>
         <item> Agent </item>
         <item> Broker </item>
     </string-array>
 
     <string-array name="type_array">
-    <item> Type</item>
+    <item> Select Type </item>
     <item> Individual</item>
     <item> Corporate</item>
     </string-array>
@@ -27,14 +28,9 @@
         <item> No </item>
     </string-array>
 
-    <string-array name="claim_policytype_array">
-        <item> Should STI Provide Estimate </item>
-        <item> Yes </item>
-        <item> No </item>
-    </string-array>
 
     <string-array name="claim_array">
-        <item> Claim Type </item>
+        <item> Select Claim Type </item>
         <item> Motor Insurance </item>
         <item> Non-motor Insurance </item>
     </string-array>
@@ -46,15 +42,62 @@
     <item> Female</item>
 </string-array>
 
+    <string-array name="country_array">
+        <item> Country </item>
+        <item> Nigeria</item>
+        <item> Other Countries </item>
+    </string-array>
+
+    <string-array name="state_array">
+        <item> State </item>
+        <item> Abia</item>
+        <item> Adamawa</item>
+        <item> Anambra</item>
+        <item> Akwa Ibom</item>
+        <item> Bauchi</item>
+        <item> Bayelsa</item>
+        <item> Benue</item>
+        <item> Borno</item>
+        <item> Cross River</item>
+        <item> Delta</item>
+        <item> Ebonyi</item>
+        <item> Enugu</item>
+        <item> Edo</item>
+        <item> Ekiti</item>
+        <item> Gombe</item>
+        <item> Imo</item>
+        <item> Jigawa</item>
+        <item> Kaduna</item>
+        <item> Kano</item>
+        <item> Katsina</item>
+        <item> Kebbi</item>
+        <item> Kogi</item>
+        <item> Kwara</item>
+        <item> Lagos</item>
+        <item> Nasarawa</item>
+        <item> Niger</item>
+        <item> Ogun</item>
+        <item> Ondo</item>
+        <item> Osun</item>
+        <item> Oyo</item>
+        <item> Plateau</item>
+        <item> Rivers</item>
+        <item> Sokoto</item>
+        <item> Taraba</item>
+        <item> Yobe</item>
+        <item> Zamfara</item>
+        <item> FCT - Abuja</item>
+    </string-array>
+
     <string-array name="disable_array">
-        <item> Disability </item>
+        <item> Select Disability </item>
         <item> Yes </item>
         <item> No</item>
     </string-array>
 
 
     <string-array name="marital_array">
-        <item> Marital Status </item>
+        <item> Select Marital Status </item>
         <item> Single</item>
         <item> Married</item>
         <item> Divorced </item>
@@ -63,7 +106,7 @@
     </string-array>
 
     <string-array name="currency_array">
-        <item> Currency </item>
+        <item> Select Currency </item>
         <item> Dollar </item>
         <item> Naira </item>
         <item> Euro </item>
@@ -91,14 +134,14 @@
     </string-array>
 
     <string-array name="benefit_array">
-        <item> Benefit Category </item>
+        <item> Select Benefit Category </item>
         <item> Single</item>
         <item> Double</item>
         <item> Tripled </item>
     </string-array>
 
     <string-array name="prefix_array">
-        <item> Prefix </item>
+        <item> Select Prefix </item>
         <item> Mr.</item>
         <item> Mrs.</item>
         <item> Ms.</item>
@@ -110,7 +153,7 @@
 
 
     <string-array name="policy_type_array">
-        <item> Policy Type </item>
+        <item> Select Policy Type </item>
         <item> Private</item>
         <item> Commercial</item>
         <item> Motor Cycle</item>
@@ -128,7 +171,7 @@
 
 
     <string-array name="private_type_array">
-        <item> Private </item>
+        <item> Select Cover </item>
         <item> 3rd Party Only </item>
         <item> 3rd Party Fire and theft </item>
         <item> Enhanced 3rd Party </item>
@@ -137,35 +180,38 @@
 
 
     <string-array name="pEnhance_type_array">
-        <item> Enhanced 3rd Party </item>
+        <item> Select Enhanced 3rd Party </item>
         <item> Unique </item>
         <item> Luxury </item>
         <item> Prestige </item>
     </string-array>
 
+    <string-array name="mode_of_payment">
+        <item> Mode of Payment </item>
+        <item> Wallet </item>
+        <item> PayStack </item>
+
+    </string-array>
+
     <string-array name="commercial_type_array">
-        <item> Commercial </item>
+        <item> Select Cover </item>
         <item> 3rd Party Only </item>
         <item> Comprehensive </item>
     </string-array>
 
     <string-array name="motor_cycle_type_array">
-        <item> Motor Cycle Policy </item>
+        <item> Select Motor Cycle Policy </item>
         <item> 3rd Party Only </item>
         <item> Comprehensive </item>
     </string-array>
 
     <string-array name="vehicleMaker_type_array">
-        <item> Vehicle Maker </item>
-        <item> Acura </item>
-        <item> Audi </item>
-        <item> Bentley </item>
-        <item> BMW </item>
-        <item> Brilliance </item>
+        <item> Select Vehicle Maker </item>
+
     </string-array>
 
     <string-array name="vehicleBody_type_array">
-        <item> Body Type </item>
+        <item> Select Body Type </item>
         <item> Cars </item>
         <item> SUV/MUV </item>
         <item> Coupe </item>

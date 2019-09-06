@@ -1,12 +1,17 @@
 package com.example.sti_agent.operation_fragment.Swiss;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +19,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.sti_agent.BuildConfig;
+import com.example.sti_agent.NetworkConnection;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +42,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,8 +125,16 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
     AVLoadingIndicatorView mProgressbar1S1;
    
 
-    String maritalString,genderString,prifixString,benefitString;
+    String maritalString,genderString,prifixString,benefitString,DobString,cameraFilePath;
+    DatePickerDialog datePickerDialog1;
     private int currentStep = 0;
+
+    int PICK_IMAGE_PASSPORT = 1;
+    int CAM_IMAGE_PASSPORT = 2;
+    NetworkConnection networkConnection=new NetworkConnection();
+
+    Uri personal_info_img_uri;
+    String personal_img_url;
 
 
     public SwissFragment1() {
@@ -158,9 +186,12 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
         genderSpinner();
         benfitSpinner();
         setViewActions();
+        showDatePicker();
 
         return  view;
     }
+
+
 
     private  void init(){
         UserPreferences userPreferences = new UserPreferences(getContext());
@@ -314,6 +345,7 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
     //seting onclicks listeners
     private void setViewActions() {
         mUploadPassportBtnS1.setOnClickListener(this);
+        mDobEditxtS.setOnClickListener(this);
         mNextBtn1S1.setOnClickListener(this);
     }
 
@@ -321,21 +353,248 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.upload_passport_btn_s1:
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose Mode of Entry");
+// add a list
+                String[] entry = {"Camera", "Gallery"};
+                builder.setItems(entry, (dialog, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdImage_camera();
+                            dialog.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageFile();
+                            dialog.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                mUploadPassportBtnS1.setBackgroundColor(getResources().getColor(R.color.colorAccentEnds));
 
                 break;
+            case R.id.dob_editxt_s:
+                datePickerDialog1.show();
+                break;
+
             case R.id.next_btn1_s1:
 //                validate user input
-
-                if (currentStep < mStepView.getStepCount() - 1) {
-                    currentStep++;
-                    mStepView.go(currentStep, true);
-                    validateUserInputs();
-                } else {
-                    mStepView.done(true);
-                }
+                validateUserInputs();
 
                 break;
         }
+    }
+
+    private void chooseImageFile() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_PASSPORT);
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //This is the directory in which the file will be created. This is the default location of Camera photos
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for using again
+        cameraFilePath = "file://" + image.getAbsolutePath();
+        return image;
+    }
+
+
+
+    private void chooseIdImage_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_PASSPORT);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0) {
+            showMessage("No image is selected, try again");
+            return;
+        }
+
+
+        showMessage("Uploading...");
+        if (networkConnection.isNetworkConnected(getContext())) {
+            Random random=new Random();
+            String rand= String.valueOf(random.nextInt());
+            if (requestCode == 1) {
+                personal_info_img_uri = data.getData();
+
+                try {
+                    if (personal_info_img_uri != null) {
+                        String name = mFirstnameEditxtS1.getText().toString()+rand;
+                        if (name.equals("")) {
+                            showMessage("Enter your your first name first");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(personal_info_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/user_passport" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mNextBtn1S1.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mNextBtn1S1.setVisibility(View.VISIBLE);
+                                            personal_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mNextBtn1S1.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if (requestCode == 2) {
+                personal_info_img_uri = Uri.parse(cameraFilePath);
+
+                try {
+                    if (personal_info_img_uri != null) {
+                        String name = mFirstnameEditxtS1.getText().toString()+rand;
+                        if (name.equals("")) {
+                            showMessage("Enter your your first name first");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(personal_info_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/user_passport" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            mNextBtn1S1.setVisibility(View.GONE);
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            mProgressbar1S1.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                            mNextBtn1S1.setVisibility(View.VISIBLE);
+                                            personal_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            mNextBtn1S1.setVisibility(View.VISIBLE);
+                                            mProgressbar1S1.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            return;
+        }
+        showMessage("No Internet connection discovered!");
     }
 
     private void validateUserInputs() {
@@ -354,15 +613,6 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
 
             }
 
-            /*if (email_editxt.getText().toString().isEmpty()&&inputLayoutEmail.isClickable()) {
-                inputLayoutEmail.setError("Email is required!");
-                isValid = false;
-            } else if (!isValidEmailAddress(email_editxt.getText().toString())) {
-                inputLayoutEmail.setError("Valid Email is required!");
-                isValid = false;
-            } else {
-                inputLayoutEmail.setErrorEnabled(false);
-            }*/
             
             if (mPhoneNoEditxtS1.getText().toString().isEmpty()) {
                 mInputLayoutPhoneS1.setError("Phone number is required");
@@ -417,16 +667,21 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
                 mInputLayoutDisabilityS1.setErrorEnabled(false);
             }
 
+            if (personal_img_url==null) {
+                showMessage("Please upload an image: passport,company license..etc");
+                isValid = false;
+            }
+
             //Type Spinner
             maritalString = mMaritalSpinnerS1.getSelectedItem().toString();
-            if (maritalString.equals("Marital Status")) {
+            if (maritalString.equals("Select Marital Status")) {
 
                 showMessage("Select Marital Status");
                 isValid = false;
             }
             //Prefix Spinner
             prifixString = mPrefixSpinnerS.getSelectedItem().toString();
-            if (prifixString.equals("Prefix")) {
+            if (prifixString.equals("Select Prefix")) {
                 showMessage("Select your Prefix e.g Mr.");
                 isValid = false;
             }
@@ -438,7 +693,7 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
             }
 
             benefitString = mBenefitSpinnerS.getSelectedItem().toString();
-            if (benefitString.equals("Benefit Category")) {
+            if (benefitString.equals("Select Benefit Category")) {
                 showMessage("Don't forget to Select Benefit Category");
                 isValid = false;
             }
@@ -460,9 +715,7 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
 
         try {
             UserPreferences userPreferences = new UserPreferences(getContext());
-
             //Temporal save and go to next Operation
-
             userPreferences.setSwissIMaritalStatus(maritalString);
             userPreferences.setSwissIBenefit(benefitString);
             userPreferences.setSwissIPrefix(prifixString);
@@ -476,11 +729,19 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
             userPreferences.setSwissIDob(mDobEditxtS.getText().toString());
             userPreferences.setSwissIDisable(mDisabiltyEditxtS1.getText().toString());
             userPreferences.setSwissIPhoneNum(mPhoneNoEditxtS1.getText().toString());
+            userPreferences.setSwissIPersonal_image(personal_img_url);
 
-            Fragment swissFragment2 = new SwissFragment2();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_swiss_form_container, swissFragment2);
-            ft.commit();
+            if (currentStep < mStepView.getStepCount() - 1) {
+                currentStep++;
+                Fragment swissFragment2 = new SwissFragment2();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_swiss_form_container, swissFragment2);
+                ft.commit();
+                mStepView.go(currentStep, true);
+            } else {
+                mStepView.done(true);
+            }
+
 
         }catch (Exception e){
             Log.i("Form Error",e.getMessage());
@@ -493,47 +754,35 @@ public class SwissFragment1 extends Fragment implements View.OnClickListener{
 
 
     private void showMessage(String s) {
-        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mQbFormLayout1, s, Snackbar.LENGTH_LONG).show();
     }
 
-   /* public static boolean isValidEmailAddress(String email) {
-        boolean result = true;
-        if (null != email) {
-            String regex = "^([_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{1,6}))?$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(email);
-            if (!matcher.matches()) {
-                result = false;
-            }
-        }
 
-        return result;
-    }*/
+    private void showDatePicker() {
+        //Get current date
+        Calendar calendar = Calendar.getInstance();
 
+        //Create datePickerDialog with initial date which is current and decide what happens when a date is selected.
+        datePickerDialog1 = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                //When a date is selected, it comes here.
+                //Change birthdayEdittext's text and dismiss dialog.
+                if(year>calendar.get(Calendar.YEAR)){
 
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
+                    showMessage("Invalid Born Date");
+                    Log.i("Calendar",year+" "+calendar.get(Calendar.YEAR));
+                    return;
                 }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
+                int monthofYear=monthOfYear+1;
+                DobString = dayOfMonth + "-" + monthofYear + "-" + year;
+                mDobEditxtS.setText(DobString);
+                datePickerDialog1.dismiss();
             }
-        }
-
-        return false;
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
+
+
 
 
 }

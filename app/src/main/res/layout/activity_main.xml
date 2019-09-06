@@ -20,7 +20,6 @@
         app:popupTheme="@style/MyPopupTheme"
         android:theme="@style/MyToolBarTheme"
         app:titleTextColor="#FFFFFF"
-
         app:titleTextAppearance="@style/Toolbar.TitleText"
         app:subtitleTextAppearance="@style/Toolbar.SubTitleText"
         app:title="@string/app_name">
@@ -34,11 +33,6 @@
         android:layout_weight="1"
 
         />
-
-
-
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

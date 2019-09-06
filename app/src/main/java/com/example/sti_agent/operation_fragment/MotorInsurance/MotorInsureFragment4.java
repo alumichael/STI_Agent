@@ -1,12 +1,16 @@
 package com.example.sti_agent.operation_fragment.MotorInsurance;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,19 +19,33 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.sti_agent.BuildConfig;
 import com.example.sti_agent.Model.Vehicle.Personal_detail;
 import com.example.sti_agent.Model.Vehicle.VehicleDetails;
 import com.example.sti_agent.Model.Vehicle.VehiclePictures;
 import com.example.sti_agent.Model.Vehicle.VehiclePolicy;
+import com.example.sti_agent.NetworkConnection;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.shuhart.stepview.StepView;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +92,31 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
     @BindView(R.id.progressbar)
     AVLoadingIndicatorView progressbar;
+    String cameraFilePath;
+
+    int PICK_IMAGE_FRONTVIEW = 1;
+    int PICK_IMAGE_BACKVIEW = 2;
+    int PICK_IMAGE_LEFTVIEW = 3;
+    int PICK_IMAGE_RIGHTVIEW = 4;
+
+    int CAM_IMAGE_FRONTVIEW = 11;
+    int CAM_IMAGE_BACKVIEW = 22;
+    int CAM_IMAGE_LEFTVIEW = 33;
+    int CAM_IMAGE_RIGHTVIEW = 44;
+    NetworkConnection networkConnection=new NetworkConnection();
+
+    Uri frontview_img_uri;
+    String frontview_img_url;
+
+    Uri backview_img_uri;
+    String backview_img_url;
+
+    Uri leftview_img_uri;
+    String leftview_img_url;
+
+    Uri rightview_img_uri;
+    String rightview_img_url;
+
 
 
 
@@ -153,8 +196,737 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
         v_next_btn.setOnClickListener(this);
         v_back_btn.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
+        front_img_btn.setOnClickListener(this);
+        back_img_btn.setOnClickListener(this);
+        left_img_btn.setOnClickListener(this);
+        right_img_btn1.setOnClickListener(this);
+
 
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //This is the directory in which the file will be created. This is the default location of Camera photos
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for using again
+        cameraFilePath = "file://" + image.getAbsolutePath();
+        return image;
+    }
+
+
+
+    private void chooseIdFront_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_FRONTVIEW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+    private void chooseIdBack_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_BACKVIEW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+    private void chooseIdLeft_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_LEFTVIEW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+    private void chooseIdRight_camera() {
+
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", createImageFile()));
+            startActivityForResult(intent, CAM_IMAGE_RIGHTVIEW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showMessage("Invalid Entry");
+            Log.i("Invalid_Cam_Entry",ex.getMessage());
+        }
+    }
+
+    private void chooseImageFront() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_FRONTVIEW);
+    }
+
+    private void chooseImageBack() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_BACKVIEW);
+    }
+
+    private void chooseImageRight() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_RIGHTVIEW);
+    }
+
+    private void chooseImageLeft() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction("android.intent.action.GET_CONTENT");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_LEFTVIEW);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0 ) {
+            showMessage("No image is selected, try again");
+            return;
+        }
+
+
+        showMessage("Uploading...");
+        if (networkConnection.isNetworkConnected(getContext())) {
+
+            if (requestCode == 1) {
+                frontview_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (frontview_img_uri != null) {
+                        String name = "frontview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(frontview_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            frontview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            if (requestCode == 11) {
+                frontview_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (frontview_img_uri != null) {
+                        String name = "frontview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(frontview_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            frontview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if (requestCode == 2){
+
+                backview_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (backview_img_uri != null) {
+                        String name = "backview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(backview_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            backview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if (requestCode == 22){
+
+                backview_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (backview_img_uri != null) {
+                        String name = "backview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(backview_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            backview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 3){
+
+                rightview_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (rightview_img_uri != null) {
+                        String name = "rightview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(rightview_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            rightview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 33){
+
+                rightview_img_uri = Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (rightview_img_uri != null) {
+                        String name = "rightview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(rightview_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            rightview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 4){
+
+                leftview_img_uri = data.getData();
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (leftview_img_uri != null) {
+                        String name = "leftview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(Uri.parse(leftview_img_uri.toString()))
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            leftview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }else if(requestCode == 44){
+
+                leftview_img_uri =Uri.parse(cameraFilePath);
+
+                Random random=new Random();
+                String rand= String.valueOf(random.nextInt());
+
+                try {
+                    if (leftview_img_uri != null) {
+                        String name = "leftview"+rand;
+                        if (name.equals("")) {
+                            showMessage("Please try again");
+
+                        } else {
+
+                            String imageId = MediaManager.get().upload(leftview_img_uri)
+                                    .option("public_id", "user_registration/profile_photos/vehicle_image" + name)
+                                    .unsigned("xbiscrhh").callback(new UploadCallback() {
+                                        @Override
+                                        public void onStart(String requestId) {
+                                            // your code here
+                                            btn_layout3.setVisibility(View.GONE);
+                                            progressbar.setVisibility(View.VISIBLE);
+
+                                        }
+
+                                        @Override
+                                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                                            // example code starts here
+                                            Double progress = (double) bytes / totalBytes;
+                                            // post progress to app UI (e.g. progress bar, notification)
+                                            // example code ends here
+                                            progressbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String requestId, Map resultData) {
+                                            // your code here
+
+                                            showMessage("Image Uploaded Successfully");
+                                            Log.i("ImageRequestId ", requestId);
+                                            Log.i("ImageUrl ", String.valueOf(resultData.get("url")));
+                                            progressbar.setVisibility(View.GONE);
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            leftview_img_url = String.valueOf(resultData.get("url"));
+
+
+                                        }
+
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            showMessage("Error: " + error.toString());
+                                            Log.i("Error: ", error.toString());
+
+                                            btn_layout3.setVisibility(View.VISIBLE);
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onReschedule(String requestId, ErrorInfo error) {
+                                            // your code here
+                                        }
+                                    })
+                                    .dispatch();
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessage("Please Check your Image");
+
+                }
+
+            }
+            return;
+        }
+        showMessage("No Internet connection discovered!");
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -162,6 +934,133 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
             case R.id.v_next_btn2:
 //                send quote to client and sti
                 mSummary();
+                break;
+
+            case R.id.front_img_btn:
+                // setup the alert builder
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("Choose Mode of Entry");
+
+// add a list
+                String[] entry2 = {"Camera", "Gallery"};
+                builder2.setItems(entry2, (dialog2, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdFront_camera();
+                            dialog2.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageFront();
+                            dialog2.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog2 = builder2.create();
+                dialog2.show();
+                front_img_btn.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+
+
+                break;
+
+            case R.id.back_img_btn:
+                // setup the alert builder
+                AlertDialog.Builder builder3 = new AlertDialog.Builder(getContext());
+                builder3.setTitle("Choose Mode of Entry");
+
+// add a list
+                String[] entry3 = {"Camera", "Gallery"};
+                builder3.setItems(entry3, (dialog3, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdBack_camera();
+                            dialog3.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageBack();
+                            dialog3.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog3 = builder3.create();
+                dialog3.show();
+                back_img_btn.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+
+                break;
+
+            case R.id.left_img_btn:
+                // setup the alert builder
+                AlertDialog.Builder builder4 = new AlertDialog.Builder(getContext());
+                builder4.setTitle("Choose Mode of Entry");
+
+// add a list
+                String[] entry4 = {"Camera", "Gallery"};
+                builder4.setItems(entry4, (dialog4, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdLeft_camera();
+                            dialog4.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageLeft();
+                            dialog4.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog4 = builder4.create();
+                dialog4.show();
+                left_img_btn.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                 
+
+                break;
+
+            case R.id.right_img_btn:
+                // setup the alert builder
+                AlertDialog.Builder builder5 = new AlertDialog.Builder(getContext());
+                builder5.setTitle("Choose Mode of Entry");
+
+// add a list
+                String[] entry5 = {"Camera", "Gallery"};
+                builder5.setItems(entry5, (dialog5, option) -> {
+                    switch (option) {
+                        case 0:
+                            // direct entry
+                            chooseIdRight_camera();
+                            dialog5.dismiss();
+                            break;
+
+                        case 1: // export
+
+                            chooseImageRight();
+                            dialog5.dismiss();
+
+                            break;
+
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog5 = builder5.create();
+                dialog5.show();
+                right_img_btn1.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                  
+
                 break;
 
             case R.id.v_back_btn2:
@@ -179,6 +1078,9 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.fabAdd:
+
+                if(frontview_img_url!=null&&leftview_img_url!=null&&rightview_img_url!=null&&backview_img_url!=null) {
+
                 UserPreferences userPreferences=new UserPreferences(getContext());
 
 
@@ -228,10 +1130,10 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
                             //Vehicle Picture List
                             VehiclePictures vehiclePictures=new VehiclePictures();
-                            vehiclePictures.setFront_view("Front Link");
-                            vehiclePictures.setBack_view("Back Link");
-                            vehiclePictures.setLeft_view("Left Link");
-                            vehiclePictures.setRight_view("Right Link");
+                            vehiclePictures.setFront_view(frontview_img_url);
+                            vehiclePictures.setBack_view(backview_img_url);
+                            vehiclePictures.setLeft_view(leftview_img_url);
+                            vehiclePictures.setRight_view(rightview_img_url);
 
                             RealmList<VehiclePictures>vehiclePicturesList=new RealmList<>();
                             vehiclePicturesList.add(vehiclePictures);
@@ -276,10 +1178,11 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
                             vehicleDetails.setVehicle_value(userPreferences.getMotorVehicleValue());
                             //Vehicle Picture List
                             VehiclePictures vehiclePictures=new VehiclePictures();
-                            vehiclePictures.setFront_view("Front Link");
-                            vehiclePictures.setBack_view("Back Link");
-                            vehiclePictures.setLeft_view("Left Link");
-                            vehiclePictures.setRight_view("Right Link");
+
+                                vehiclePictures.setFront_view(frontview_img_url);
+                                vehiclePictures.setBack_view(backview_img_url);
+                                vehiclePictures.setLeft_view(leftview_img_url);
+                                vehiclePictures.setRight_view(rightview_img_url);
 
                             RealmList<VehiclePictures>vehiclePicturesList=new RealmList<>();
                             vehiclePicturesList.add(vehiclePictures);
@@ -309,6 +1212,9 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
                 });
 
 
+
+
+
                 stepView.done(false);
                 stepView.go(1, true);
 
@@ -316,13 +1222,22 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
                 FragmentTransaction ftrans = getFragmentManager().beginTransaction();
                 ftrans.replace(R.id.fragment_motor_form_container, quoteBuyFragment2);
                 ftrans.commit();
+
+                }else{
+                    showMessage("Invalid Entry please upload your image");
+                    return;
+                }
+
                 break;
         }
     }
 
     private void mSummary() {
 
-        UserPreferences userPreferences=new UserPreferences(getContext());
+        if(frontview_img_url!=null&&leftview_img_url!=null&&rightview_img_url!=null&&backview_img_url!=null) {
+
+
+            UserPreferences userPreferences=new UserPreferences(getContext());
         btn_layout3.setVisibility(View.GONE);
         progressbar.setVisibility(View.VISIBLE);
 
@@ -365,10 +1280,10 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
         //Vehicle Picture List
         VehiclePictures vehiclePictures=new VehiclePictures();
-        vehiclePictures.setFront_view("Front Link");
-        vehiclePictures.setBack_view("Back Link");
-        vehiclePictures.setLeft_view("Left Link");
-        vehiclePictures.setRight_view("Right Link");
+            vehiclePictures.setFront_view(frontview_img_url);
+            vehiclePictures.setBack_view(backview_img_url);
+            vehiclePictures.setLeft_view(leftview_img_url);
+            vehiclePictures.setRight_view(rightview_img_url);
 
         RealmList<VehiclePictures>vehiclePicturesList=new RealmList<>();
         vehiclePicturesList.add(vehiclePictures);
@@ -403,6 +1318,11 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
         ft.replace(R.id.fragment_motor_form_container, MotorInsureFragment5.newInstance(primaryKey));
         ft.commit();
 
+        }else{
+            showMessage("Invalid Entry please upload your image");
+            return;
+        }
+
 
 
 
@@ -412,34 +1332,10 @@ class MotorInsureFragment4 extends Fragment implements View.OnClickListener{
 
 
     private void showMessage(String s) {
-        Snackbar.make(qb_form_layout4, s, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(qb_form_layout4, s, Snackbar.LENGTH_LONG).show();
     }
 
 
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
-    }
 
 
 }

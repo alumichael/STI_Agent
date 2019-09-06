@@ -8,9 +8,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sti_agent.Model.Vehicle.Personal_detail;
 import com.example.sti_agent.Model.Vehicle.VehicleDetails;
+import com.example.sti_agent.Model.Vehicle.VehiclePictures;
 import com.example.sti_agent.Model.Vehicle.VehiclePolicy;
 import com.example.sti_agent.R;
 import com.example.sti_agent.UserPreferences;
@@ -88,6 +92,7 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
     private  int currentStep=4;
     Realm realm;
     VehiclesListAdapter vehiclesListAdapter;
+    String modeofPaymentString;
 
 
 
@@ -136,10 +141,43 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
 
 
         init();
+        modeofPaymentSpinner();
         setViewActions();
 
         return  view;
     }
+//Mode of Payment
+
+    private void modeofPaymentSpinner() {
+        // Create an ArrayAdapter using the string array and a default spinner
+        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
+                .createFromResource(getContext(), R.array.mode_of_payment,
+                        android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        modeOfPayment_spinner_m5.setAdapter(staticAdapter);
+
+        modeOfPayment_spinner_m5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String modeofPaymentTypeString = (String) parent.getItemAtPosition(position);
+
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                modeOfPayment_spinner_m5.getItemAtPosition(0);
+            }
+        });
+
+    }
+
     private void init(){
 
         UserPreferences userPreferences=new UserPreferences(getContext());
@@ -231,6 +269,16 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
         //String title;
         results=realm.where(VehicleDetails.class).findAll();
 
+        //VehiclePictures
+        //retrieve data
+        final RealmResults<VehiclePictures> picture_results;
+        //String title;
+        picture_results=realm.where(VehiclePictures.class).findAll();
+
+
+        Log.i("VPictures",picture_results.toString());
+        Log.i("VPicturesSize", String.valueOf(picture_results.size()));
+
         if(results==null){
             showMessage("REsult is null");
         }
@@ -241,10 +289,6 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
         recycler_vehicles.setLayoutManager(linearLayoutManager);
         recycler_vehicles.setAdapter(vehiclesListAdapter);
 
-        /*RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
-        recycler_note.setLayoutManager(mLayoutManager);
-        recycler_note.setItemAnimator(new DefaultItemAnimator());
-        recycler_note.setAdapter(adapter);*/
 
 
         dialog.setContentView(view);
@@ -332,32 +376,6 @@ class MotorInsureFragment5 extends Fragment implements View.OnClickListener{
 
     private void showMessage(String s) {
         Snackbar.make(qb_form_layout4, s, Snackbar.LENGTH_SHORT).show();
-    }
-
-
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
     }
 
 

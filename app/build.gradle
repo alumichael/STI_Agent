@@ -26,6 +26,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
@@ -68,6 +69,11 @@ dependencies {
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+    //Intterceptor
+    implementation "com.squareup.okhttp3:logging-interceptor:3.8.0"
+
+    //paystack
+ //   implementation 'co.paystack.android:paystack:3.0.12'
 
 
     //cloudinary API
@@ -77,10 +83,6 @@ dependencies {
     implementation 'org.apache.poi:poi:3.17'
     implementation 'org.apache.poi:poi-ooxml:3.17'*/
     implementation 'com.fasterxml:aalto-xml:1.0.0'
-
-
-
-
 
     testImplementation "junit:junit:${rootProject.ext.junitLibVersion}"
     androidTestImplementation "com.android.support.test:runner:${rootProject.ext.androidTestRunnerLibVersion}"

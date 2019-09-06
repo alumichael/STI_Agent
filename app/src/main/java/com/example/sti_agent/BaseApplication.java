@@ -7,6 +7,7 @@ import com.cloudinary.android.MediaManager;
 import java.util.HashMap;
 import java.util.Map;
 
+//import co.paystack.android.PaystackSdk;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -20,7 +21,7 @@ public class BaseApplication extends Application {
         Realm.setDefaultConfiguration(realmConfiguration);
 
 
-
+        //PaystackSdk.initialize(getApplicationContext());
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();

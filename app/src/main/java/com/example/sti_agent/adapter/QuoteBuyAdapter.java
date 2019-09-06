@@ -87,116 +87,25 @@ public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
                     dialog.show();
                          break;
                 case "SWIS-F Insurance":
-                    // setup the alert builder
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                    builder1.setTitle("Choose Mode of Entry");
-// add a list
-                    String[] entry1 = {"Direct Input", "Import Excel file"};
-                    builder1.setItems(entry1, (dialog1, option) -> {
-                        switch (option) {
-                            case 0:
-                                // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), SwissForm.class);
-                                dialog1.dismiss();
 
-                            case 1: // export
-                                dialog1.dismiss();
-                        }
-                    });
-// create and show the alert dialog
-                    AlertDialog dialog1 = builder1.create();
-                    dialog1.show();
-                    
-                    
-                    break;
+                    nextActivity(quotecardList.get(pos).getTitle(), SwissForm.class);
+
+                   break;
                 case "Marine Insurance":
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
-                    builder2.setTitle("Choose Mode of Entry");
-// add a list
-                    String[] entry2 = {"Direct Input", "Import Excel file"};
-                    builder2.setItems(entry2, (dialog2, option) -> {
-                        switch (option) {
-                            case 0:
-                                // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), MarineForm.class);
-                                dialog2.dismiss();
-
-                            case 1: // export
-                                dialog2.dismiss();
-                        }
-                    });
-// create and show the alert dialog
-                    AlertDialog dialog2 = builder2.create();
-                    dialog2.show();
-
-
-
+                    nextActivity(quotecardList.get(pos).getTitle(), MarineForm.class);
 
                     break;
                 case "All Risks Insurance":
-                    AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                    builder3.setTitle("Choose Mode of Entry");
-// add a list
-                    String[] entry3 = {"Direct Input", "Import Excel file"};
-                    builder3.setItems(entry3, (dialog3, option) -> {
-                        switch (option) {
-                            case 0:
-                                // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), AllRiskForm.class);
-                                dialog3.dismiss();
-
-                            case 1: // export
-                                dialog3.dismiss();
-                        }
-                    });
-// create and show the alert dialog
-                    AlertDialog dialog3 = builder3.create();
-                    dialog3.show();
-
+                    nextActivity(quotecardList.get(pos).getTitle(), AllRiskForm.class);
                     
                     break;
                 case "ETIC Insurance":
-                    AlertDialog.Builder builder4 = new AlertDialog.Builder(context);
-                    builder4.setTitle("Choose Mode of Entry");
-// add a list
-                    String[] entry4 = {"Direct Input", "Import Excel file"};
-                    builder4.setItems(entry4, (dialog4, option) -> {
-                        switch (option) {
-                            case 0:
-                                // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), EticForm.class);
-                                dialog4.dismiss();
-
-                            case 1: // export
-                                dialog4.dismiss();
-                        }
-                    });
-// create and show the alert dialog
-                    AlertDialog dialog4 = builder4.create();
-                    dialog4.show();
-
+                    nextActivity(quotecardList.get(pos).getTitle(), EticForm.class);
                     break;
 
                 case "Other Insurance":
-                    AlertDialog.Builder builder5 = new AlertDialog.Builder(context);
-                    builder5.setTitle("Choose Mode of Entry");
-// add a list
-                    String[] entry5 = {"Direct Input", "Import Excel file"};
-                    builder5.setItems(entry5, (dialog5, option) -> {
-                        switch (option) {
-                            case 0:
-                                // direct entry
-                                nextActivity(quotecardList.get(pos).getTitle(), OtherInsuredForm.class);
-                                dialog5.dismiss();
-
-                            case 1: // export
-                                dialog5.dismiss();
-                        }
-                    });
-// create and show the alert dialog
-                    AlertDialog dialog5 = builder5.create();
-                    dialog5.show();
-                        break;
+                    nextActivity(quotecardList.get(pos).getTitle(), OtherInsuredForm.class);
+                    break;
 
                 }
 

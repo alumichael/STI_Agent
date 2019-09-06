@@ -16,7 +16,7 @@
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/progressbar_customer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/size_twenty_eight"
         android:visibility="visible"
         android:layout_gravity="center"
         app:indicatorColor="@color/colorAccent"

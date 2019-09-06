@@ -66,6 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:visibility="visible"
+                        android:background="@drawable/spinner_bg"
                         />
 
                     <Spinner
@@ -74,6 +75,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
 
                         />
@@ -237,7 +239,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
-android:visibility="gone"
+                        android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
                     <Spinner
@@ -246,6 +249,7 @@ android:visibility="gone"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
 
@@ -288,7 +292,7 @@ android:visibility="gone"
                             android:background="@drawable/rounded_bg"
                             android:hint="Phone Number"
                             android:importantForAutofill="noExcludeDescendants"
-                            android:inputType="text"
+                            android:inputType="number"
                             android:padding="@dimen/size_ten"
                             tools:targetApi="o"
                             />

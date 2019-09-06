@@ -26,10 +26,6 @@ private Context context;
     Realm realm;
    // int count=0;
 
-
-
-
-
     public otherInsureListAdapter(RealmResults<insureProduct> list , Context context) {
         super(list,true,true);
         this.context=context;

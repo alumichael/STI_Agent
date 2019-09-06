@@ -66,6 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:visibility="visible"
+                        android:background="@drawable/spinner_bg"
                         />
 
                     <Spinner
@@ -75,6 +76,7 @@
                         android:layout_marginTop="@dimen/size_three"
                         android:visibility="gone"
                         android:clickable="false"
+                        android:background="@drawable/spinner_bg"
 
                         />
                     <com.google.android.material.textfield.TextInputLayout
@@ -214,7 +216,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="@dimen/size_three"
-android:visibility="gone"
+                        android:visibility="gone"
+                        android:background="@drawable/spinner_bg"
                         android:clickable="false"
                         />
 

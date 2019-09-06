@@ -214,7 +214,7 @@ public class OtherInsureFragment2 extends Fragment implements View.OnClickListen
         }
 
         productTypeString = mSelectProdTypeSpinnerO2.getSelectedItem().toString();
-        if (productTypeString.equals("Select Item")) {
+        if (productTypeString.equals("Select Product")) {
             showMessage("Select Item");
             isValid = false;
         }
@@ -260,32 +260,6 @@ public class OtherInsureFragment2 extends Fragment implements View.OnClickListen
 
     private void showMessage(String s) {
         Snackbar.make(mQbFormLayout2, s, Snackbar.LENGTH_SHORT).show();
-    }
-
-
-
-    public  boolean isNetworkConnected() {
-        Context context = getContext();
-        final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                final NetworkInfo ni = cm.getActiveNetworkInfo();
-
-                if (ni != null) {
-                    return (ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || ni.getType() == ConnectivityManager.TYPE_MOBILE));
-                }
-            } else {
-                final Network n = cm.getActiveNetwork();
-
-                if (n != null) {
-                    final NetworkCapabilities nc = cm.getNetworkCapabilities(n);
-
-                    return (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
-                }
-            }
-        }
-
-        return false;
     }
 
 

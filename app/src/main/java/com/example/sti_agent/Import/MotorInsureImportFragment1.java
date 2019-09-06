@@ -512,14 +512,14 @@ public class MotorInsureImportFragment1 extends Fragment implements View.OnClick
 
             //Tyepe Spinner
             typeString = typeSpinner.getSelectedItem().toString();
-            if (typeString.equals("Type")&&typeSpinner.isClickable()) {
+            if (typeString.equals("Select Type")&&typeSpinner.isClickable()) {
 
                 showMessage("Select Product Type");
                 isValid = false;
             }
             //Prefix Spinner
             prifixString = prefixSpinner.getSelectedItem().toString();
-            if (prifixString.equals("Prefix")&&prefixSpinner.isClickable()) {
+            if (prifixString.equals("Select Prefix")&&prefixSpinner.isClickable()) {
                 showMessage("Select your Prefix e.g Mr.");
                 isValid = false;
             }
