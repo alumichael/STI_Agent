@@ -596,11 +596,12 @@
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:gravity="center_horizontal"
-          android:orientation="horizontal">
+          android:orientation="vertical">
           <TextView
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="4dp"
+              android:gravity="center_horizontal"
               android:layout_marginEnd="@dimen/size_two"
               android:layout_marginStart="@dimen/size_eight"
               android:text="Already Register? "
@@ -611,9 +612,10 @@
 
           <TextView
               android:id="@+id/login"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="4dp"
+              android:gravity="center_horizontal"
               android:text="@string/login_txt"
               android:textColorLink="@color/colorPrimary"
               android:fontFamily="@font/montserrat_regular"

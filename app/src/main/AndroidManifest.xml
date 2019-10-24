@@ -23,6 +23,7 @@
         android:label="STI Agent"
         android:theme="@style/AppThemeSuper"
         android:screenOrientation="portrait"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         >
         <activity
